@@ -1,0 +1,1253 @@
+[
+  {
+    "version": "3.1",
+    "metric_key": "AV",
+    "value_key": "N",
+    "metric_name": "Attack Vector",
+    "value_name": "Network",
+    "official_description": "The vulnerable component is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed \"remotely exploitable\" and can be thought of as an attack being exploitable at the protocol level one or more network hops away (e.g., across one or more routers). An example of a network attack is an attacker causing a denial of service (DoS) by sending a specially crafted TCP packet across a wide area network (e.g., CVE‑2004‑0230).",
+    "simplified_description": "The vulnerable system can be attacked over a network from any distance, including from across the entire Internet. An attacker doesn't need to be on the same local network or have physical access - they can exploit the vulnerability remotely by sending network traffic through routers. For example, someone might cause a system crash by sending specially crafted network packets from anywhere on the Internet."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AV",
+    "value_key": "A",
+    "metric_name": "Attack Vector",
+    "value_name": "Adjacent",
+    "official_description": "The vulnerable component is bound to the network stack, but the attack is limited at the protocol level to a logically adjacent topology. This can mean an attack must be launched from the same shared physical (e.g., Bluetooth or IEEE 802.11) or logical (e.g., local IP subnet) network, or from within a secure or otherwise limited administrative domain (e.g., MPLS, secure VPN to an administrative network zone). One example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6) flood leading to a denial of service on the local LAN segment (e.g., CVE‑2013‑6014).",
+    "simplified_description": "The vulnerable system can be attacked over a network, but only from nearby networks or connections. The attacker must be on the same physical network (like the same WiFi or Bluetooth connection), the same local network segment (like the same subnet), or within the same restricted network domain (like a VPN). An example would be flooding a local network with fake address information that disrupts connections for other devices on that same network."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AV",
+    "value_key": "L",
+    "metric_name": "Attack Vector",
+    "value_name": "Local",
+    "official_description": "The vulnerable component is not bound to the network stack and the attacker's path is via read/write/execute capabilities. Either: the attacker exploits the vulnerability by accessing the target system locally (e.g., keyboard, console), or remotely (e.g., SSH); or the attacker relies on User Interaction by another person to perform actions required to exploit the vulnerability (e.g., using social engineering techniques to trick a legitimate user into opening a malicious document).",
+    "simplified_description": "The vulnerable system cannot be attacked directly over a network. Instead, the attacker needs either: (1) direct access to the system through a login session (either physically at the keyboard or through a remote login like SSH), or (2) to trick a legitimate user into performing certain actions (like opening a malicious file or clicking a dangerous link). This attack path requires either existing system access or human involvement."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AV",
+    "value_key": "P",
+    "metric_name": "Attack Vector",
+    "value_name": "Physical",
+    "official_description": "The attack requires the attacker to physically touch or manipulate the vulnerable component. Physical interaction may be brief (e.g., evil maid attack) or persistent. An example of such an attack is a cold boot attack in which an attacker gains access to disk encryption keys after physically accessing the target system. Other examples include peripheral attacks via FireWire/USB Direct Memory Access (DMA).",
+    "simplified_description": "The attack absolutely requires the attacker to physically touch or handle the vulnerable device. This could be brief physical contact (like quickly plugging in a malicious USB device while a computer is unattended) or longer interaction. Examples include extracting encryption keys from memory by freezing RAM chips, or using connections like FireWire/USB to directly access system memory bypassing normal security controls."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AC",
+    "value_key": "L",
+    "metric_name": "Attack Complexity",
+    "value_name": "Low",
+    "official_description": "Specialized access conditions or extenuating circumstances do not exist. An attacker can expect repeatable success when attacking the vulnerable component.",
+    "simplified_description": "The attack is straightforward and reliable. No special conditions need to be met for the attack to work, and an attacker can expect consistent success when exploiting the vulnerability. The attack doesn't require specialized timing, unusual circumstances, or luck to succeed."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AC",
+    "value_key": "H",
+    "metric_name": "Attack Complexity",
+    "value_name": "High",
+    "official_description": "A successful attack depends on conditions beyond the attacker's control. That is, a successful attack cannot be accomplished at will, but requires the attacker to invest in some measurable amount of effort in preparation or execution against the vulnerable component before a successful attack can be expected. For example, a successful attack may depend on an attacker overcoming any of the following conditions: The attacker must gather knowledge about the environment in which the vulnerable target/component exists. For example, a requirement to collect details on target configuration settings, sequence numbers, or shared secrets. The attacker must prepare the target environment to improve exploit reliability. For example, repeated exploitation to win a race condition, or overcoming advanced exploit mitigation techniques. The attacker must inject themselves into the logical network path between the target and the resource requested by the victim in order to read and/or modify network communications (e.g., a man in the middle attack).",
+    "simplified_description": "The attack is not straightforward and success is not guaranteed. The attacker can't just execute the attack at will - they need to invest significant effort in preparation or require specific conditions that they don't fully control. Success might depend on: (1) gathering specific information about the target environment that isn't readily available, like configuration details or secret values; (2) carefully preparing the target environment for reliable exploitation, such as executing attacks repeatedly to win a race condition or bypassing protection mechanisms; or (3) positioning themselves between the target and other systems to intercept and modify communications."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "PR",
+    "value_key": "N",
+    "metric_name": "Privileges Required",
+    "value_name": "None",
+    "official_description": "The attacker is unauthorized prior to attack, and therefore does not require any access to settings or files of the vulnerable system to carry out an attack.",
+    "simplified_description": "The attacker doesn't need any prior access to the system to exploit the vulnerability. The attack can be carried out from a position of no authorization or privileges whatsoever - a complete outsider can execute the attack without first needing to gain any form of access, credentials, or permissions on the vulnerable system."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "PR",
+    "value_key": "L",
+    "metric_name": "Privileges Required",
+    "value_name": "Low",
+    "official_description": "The attacker requires privileges that provide basic user capabilities that could normally affect only settings and files owned by a user. Alternatively, an attacker with Low privileges has the ability to access only non-sensitive resources.",
+    "simplified_description": "The attacker needs basic user-level access to the system before exploiting the vulnerability. This means they must have standard user account privileges that allow them to affect only their own files and settings, or access only non-sensitive resources. Typical basic user accounts with restricted permissions would be sufficient to launch the attack."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "PR",
+    "value_key": "H",
+    "metric_name": "Privileges Required",
+    "value_name": "High",
+    "official_description": "The attacker requires privileges that provide significant (e.g., administrative) control over the vulnerable component allowing access to component-wide settings and files.",
+    "simplified_description": "The attacker needs administrative-level access to the system before exploiting the vulnerability. This means they must already have significant privileges that allow them to control system-wide settings and access protected files. Typical administrative accounts (like a system administrator, root, or admin user) would be necessary to launch the attack."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "UI",
+    "value_key": "N",
+    "metric_name": "User Interaction",
+    "value_name": "None",
+    "official_description": "The vulnerable system can be exploited without interaction from any user.",
+    "simplified_description": "The attack can proceed without requiring any human to take action. The attacker can exploit the vulnerability completely on their own without needing anyone else to click anything, open a file, enter credentials, or perform any other action."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "UI",
+    "value_key": "R",
+    "metric_name": "User Interaction",
+    "value_name": "Required",
+    "official_description": "Successful exploitation of this vulnerability requires a user to take some action before the vulnerability can be exploited. For example, a successful exploit may only be possible during the installation of an application by a system administrator.",
+    "simplified_description": "The attack requires a human user (other than the attacker) to take some action before the vulnerability can be exploited. For example, a system administrator might need to install an application, a user might need to open a malicious file, or someone might need to click a specially crafted link. The attacker cannot complete the attack without this human participation."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "S",
+    "value_key": "U",
+    "metric_name": "Scope",
+    "value_name": "Unchanged",
+    "official_description": "An exploited vulnerability can only affect resources managed by the same security authority. In this case, the vulnerable component and the impacted component are either the same, or both are managed by the same security authority.",
+    "simplified_description": "The attack's impact stays contained within the same security boundary as the vulnerable component. When exploited, the vulnerability can only affect resources controlled by the same security authority. This means the attack cannot escape from its original security context to impact other unrelated systems or applications that are protected by different security controls."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "S",
+    "value_key": "C",
+    "metric_name": "Scope",
+    "value_name": "Changed",
+    "official_description": "An exploited vulnerability can affect resources beyond the security scope managed by the security authority of the vulnerable component. In this case, the vulnerable component and the impacted component are different and managed by different security authorities.",
+    "simplified_description": "The attack's impact extends beyond the original security boundary of the vulnerable component. When exploited, the vulnerability allows the attacker to affect resources that are normally protected by a different security authority. This means the attack can escape its original security context and impact other systems or applications that would typically be isolated by security boundaries (like breaking out of a virtual machine to affect the host system)."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "C",
+    "value_key": "H",
+    "metric_name": "Confidentiality",
+    "value_name": "High",
+    "official_description": "There is a total loss of confidentiality, resulting in all resources within the impacted component being divulged to the attacker. Alternatively, access to only some restricted information is obtained, but the disclosed information presents a direct, serious impact. For example, an attacker steals the administrator's password, or private encryption keys of a web server.",
+    "simplified_description": "The attack causes a severe loss of confidentiality, allowing the attacker to view sensitive information. Either all data within the affected system becomes accessible to the attacker, or the attacker gains access to specific sensitive information that has serious consequences. Examples include stealing administrator passwords or accessing private encryption keys that could decrypt all secure communications."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "C",
+    "value_key": "L",
+    "metric_name": "Confidentiality",
+    "value_name": "Low",
+    "official_description": "There is some loss of confidentiality. Access to some restricted information is obtained, but the attacker does not have control over what information is obtained, or the amount or kind of loss is limited. The information disclosure does not cause a direct, serious loss to the impacted component.",
+    "simplified_description": "The attack causes a minor loss of confidentiality, revealing some restricted information. However, the attacker cannot control exactly what information they obtain, or the scope of the information exposure is limited. The disclosed information, while unauthorized, does not cause serious or direct harm to the system. For example, revealing non-critical configuration settings or limited user data."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "C",
+    "value_key": "N",
+    "metric_name": "Confidentiality",
+    "value_name": "None",
+    "official_description": "There is no loss of confidentiality within the impacted component.",
+    "simplified_description": "The attack does not expose any confidential information. No sensitive or private data is revealed to unauthorized parties as a result of the vulnerability being exploited."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "I",
+    "value_key": "H",
+    "metric_name": "Integrity",
+    "value_name": "High",
+    "official_description": "There is a total loss of integrity, or a complete loss of protection. For example, the attacker is able to modify any/all files protected by the impacted component. Alternatively, only some files can be modified, but malicious modification would present a direct, serious consequence to the impacted component.",
+    "simplified_description": "The attack causes a severe loss of integrity, allowing the attacker to modify critical data. Either all files and data within the affected system can be altered by the attacker, or the attacker can make specific changes that have serious consequences. This means the system can no longer trust the accuracy or reliability of its data, which could lead to incorrect operation, security bypass, or system compromise."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "I",
+    "value_key": "L",
+    "metric_name": "Integrity",
+    "value_name": "Low",
+    "official_description": "Modification of data is possible, but the attacker does not have control over the consequence of a modification, or the amount of modification is limited. The data modification does not have a direct, serious impact on the impacted component.",
+    "simplified_description": "The attack causes a minor loss of integrity, allowing some data to be modified. However, the attacker cannot control exactly what changes they can make, or the extent of possible modifications is limited. The data changes, while unauthorized, do not cause serious or direct harm to the system. For example, making minor alterations to non-critical settings or limited user data."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "I",
+    "value_key": "N",
+    "metric_name": "Integrity",
+    "value_name": "None",
+    "official_description": "There is no loss of integrity within the impacted component.",
+    "simplified_description": "The attack does not alter any data. No files, settings, or other information can be changed or tampered with as a result of the vulnerability being exploited."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "A",
+    "value_key": "H",
+    "metric_name": "Availability",
+    "value_name": "High",
+    "official_description": "There is a total loss of availability, resulting in the attacker being able to fully deny access to resources in the impacted component; this loss is either sustained (while the attacker continues to deliver the attack) or persistent (the condition persists even after the attack has completed). Alternatively, the attacker has the ability to deny some availability, but the loss of availability presents a direct, serious consequence to the impacted component (e.g., the attacker cannot disrupt existing connections, but can prevent new connections; the attacker can repeatedly exploit a vulnerability that, in each instance of a successful attack, leaks a only small amount of memory, but after repeated exploitation causes a service to become completely unavailable).",
+    "simplified_description": "The attack causes a severe loss of availability, making the system or its resources completely inaccessible. The disruption either continues as long as the attacker maintains the attack or persists even after the attack stops. Alternatively, the attacker can cause a partial disruption that has serious consequences, like preventing new connections while existing ones continue, or gradually degrading a system until it becomes unusable (such as exploiting a memory leak repeatedly until the system crashes)."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "A",
+    "value_key": "L",
+    "metric_name": "Availability",
+    "value_name": "Low",
+    "official_description": "Performance is reduced or there are interruptions in resource availability. Even if repeated exploitation of the vulnerability is possible, the attacker does not have the ability to completely deny service to legitimate users. The resources in the impacted component are either partially available all of the time, or fully available only some of the time, but overall there is no direct, serious consequence to the impacted component.",
+    "simplified_description": "The attack causes a minor loss of availability, resulting in reduced performance or temporary interruptions. The system might become slower, experience brief outages, or have limited access to some features, but it isn't completely disabled. Even with repeated attacks, legitimate users can still access the system and its main functions, though possibly with degraded performance. The disruption, while noticeable, does not cause serious harm to overall operations."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "A",
+    "value_key": "N",
+    "metric_name": "Availability",
+    "value_name": "None",
+    "official_description": "There is no impact to availability within the impacted component.",
+    "simplified_description": "The attack does not affect system availability. There is no disruption to services, no performance degradation, and no denial of access to the system or its resources as a result of the vulnerability being exploited."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "E",
+    "value_key": "X",
+    "metric_name": "Exploit Code Maturity",
+    "value_name": "Not Defined",
+    "official_description": "Assigning this value indicates there is insufficient information to choose one of the other values, and has no impact on the overall Temporal Score, i.e., it has the same effect on scoring as assigning High.",
+    "simplified_description": "There isn't enough information to determine how readily available exploit code is for this vulnerability. When calculating scores, this has the same effect as assuming exploit code is widely available and highly effective (equal to selecting 'High')."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "E",
+    "value_key": "H",
+    "metric_name": "Exploit Code Maturity",
+    "value_name": "High",
+    "official_description": "Functional autonomous code exists, or no exploit is required (manual trigger) and details are widely available. Exploit code works in every situation, or is actively being delivered via an autonomous agent (such as a worm or virus). Network-connected systems are likely to encounter scanning or exploitation attempts. Exploit development has reached the level of reliable, widely available, easy-to-use automated tools.",
+    "simplified_description": "Exploit code for this vulnerability is widely available, highly reliable, and ready to use. Either fully functional automated exploit code exists, or the vulnerability is so simple to exploit that no special code is needed. The exploit works consistently across different environments and may even be spreading automatically through worms or viruses. Systems connected to networks are likely already being scanned or attacked using this vulnerability. Easy-to-use tools to exploit this vulnerability are readily available, even to attackers with minimal skills."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "E",
+    "value_key": "F",
+    "metric_name": "Exploit Code Maturity",
+    "value_name": "Functional",
+    "official_description": "Functional exploit code is available. The code works in most situations where the vulnerability exists.",
+    "simplified_description": "Working exploit code is publicly available and functions reliably in most environments. While not as polished or automated as fully mature exploits, the code successfully exploits the vulnerability in most cases where the vulnerability is present, making it accessible to attackers with moderate technical skills."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "E",
+    "value_key": "P",
+    "metric_name": "Exploit Code Maturity",
+    "value_name": "Proof-of-Concept",
+    "official_description": "Proof-of-concept exploit code is available, or an attack demonstration is not practical for most systems. The code or technique is not functional in all situations and may require substantial modification by a skilled attacker.",
+    "simplified_description": "Basic demonstration code exists that proves the vulnerability is exploitable, but it isn't fully developed. This code likely works only in specific test environments or under limited conditions, and would require significant modifications by a skilled attacker to work in real-world situations. While the vulnerability is confirmed to be exploitable, turning the proof-of-concept into a practical attack requires technical expertise."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "E",
+    "value_key": "U",
+    "metric_name": "Exploit Code Maturity",
+    "value_name": "Unproven",
+    "official_description": "No exploit code is available, or an exploit is theoretical.",
+    "simplified_description": "No working exploit code is publicly available, and successfully attacking this vulnerability remains theoretical. While the vulnerability exists, there's no evidence that anyone has successfully exploited it in practice, and no code has been published that demonstrates how to exploit it."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RL",
+    "value_key": "X",
+    "metric_name": "Remediation Level",
+    "value_name": "Not Defined",
+    "official_description": "Assigning this value indicates there is insufficient information to choose one of the other values, and has no impact on the overall Temporal Score, i.e., it has the same effect on scoring as assigning Unavailable.",
+    "simplified_description": "There isn't enough information to determine what fixes or mitigations are available for this vulnerability. When calculating scores, this has the same effect as assuming no fix is available (equal to selecting 'Unavailable')."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RL",
+    "value_key": "U",
+    "metric_name": "Remediation Level",
+    "value_name": "Unavailable",
+    "official_description": "There is either no solution available or it is impossible to apply.",
+    "simplified_description": "No fix exists for this vulnerability, or applying a fix is impossible. Organizations cannot take any corrective action to address the vulnerability other than replacing the affected system or disabling the vulnerable functionality entirely."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RL",
+    "value_key": "W",
+    "metric_name": "Remediation Level",
+    "value_name": "Workaround",
+    "official_description": "There is an unofficial, non-vendor solution available. In some cases, users of the affected technology will create a patch of their own or provide steps to work around or otherwise mitigate the vulnerability.",
+    "simplified_description": "An unofficial solution exists, but it hasn't been officially provided by the vendor. The fix might be a community-developed patch, a configuration change, or a procedural workaround shared by security researchers or users of the affected system. While these solutions can reduce risk, they haven't been officially tested or endorsed by the technology's maker."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RL",
+    "value_key": "T",
+    "metric_name": "Remediation Level",
+    "value_name": "Temporary Fix",
+    "official_description": "There is an official but temporary fix available. This includes instances where the vendor issues a temporary hotfix, tool, or workaround.",
+    "simplified_description": "An official temporary solution has been provided by the vendor. This might be a hotfix, emergency patch, or official workaround, but it's not the final, permanent solution to the vulnerability. While this temporary fix comes from an official source, it may be replaced by a more complete or better-tested solution in the future."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RL",
+    "value_key": "O",
+    "metric_name": "Remediation Level",
+    "value_name": "Official Fix",
+    "official_description": "A complete vendor solution is available. Either the vendor has issued an official patch, or an upgrade is available.",
+    "simplified_description": "A complete, official solution has been released by the vendor. This could be an official security patch, a software update, or a new version that fully addresses the vulnerability. This represents the final, properly tested fix from the authoritative source of the technology."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RC",
+    "value_key": "X",
+    "metric_name": "Report Confidence",
+    "value_name": "Not Defined",
+    "official_description": "Assigning this value indicates there is insufficient information to choose one of the other values, and has no impact on the overall Temporal Score, i.e., it has the same effect on scoring as assigning Confirmed.",
+    "simplified_description": "There isn't enough information to determine how confident we are in the existence of this vulnerability or the reported details. When calculating scores, this has the same effect as assuming the vulnerability is fully confirmed (equal to selecting 'Confirmed')."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RC",
+    "value_key": "C",
+    "metric_name": "Report Confidence",
+    "value_name": "Confirmed",
+    "official_description": "Detailed reports exist, or functional reproduction is possible (functional exploits may provide this). Source code is available to independently verify the assertions of the research, or the author or vendor of the affected code has confirmed the presence of the vulnerability.",
+    "simplified_description": "The vulnerability has been definitively verified. Either detailed technical reports exist with precise information, the vulnerability can be reliably reproduced, researchers have access to source code to verify exactly how it works, or the vendor/author has officially confirmed the vulnerability exists. There is high confidence in the accuracy of the reports about this vulnerability."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RC",
+    "value_key": "R",
+    "metric_name": "Report Confidence",
+    "value_name": "Reasonable",
+    "official_description": "Significant details are published, but researchers either do not have full confidence in the root cause, or do not have access to source code to fully confirm all of the interactions that may lead to the result. Reasonable confidence exists, however, that the bug is reproducible and at least one impact is able to be verified (proof-of-concept exploits may provide this). An example is a detailed write-up of research into a vulnerability with an explanation (possibly obfuscated or \"left as an exercise to the reader\") that gives assurances on how to reproduce the results.",
+    "simplified_description": "There is moderate confidence that the vulnerability exists as reported. Significant information has been published and at least one aspect of the vulnerability can be verified, but there are still some uncertainties. Researchers may not fully understand the root cause or don't have access to source code to verify all details. While the vulnerability appears to be real based on available evidence, some technical details might still be unclear."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "RC",
+    "value_key": "U",
+    "metric_name": "Report Confidence",
+    "value_name": "Unknown",
+    "official_description": "There are reports of impacts that indicate a vulnerability is present. The reports indicate that the cause of the vulnerability is unknown, or reports may differ on the cause or impacts of the vulnerability. Reporters are uncertain of the true nature of the vulnerability, and there is little confidence in the validity of the reports or whether a static Base Score can be applied given the differences described. An example is a bug report which notes that an intermittent but non-reproducible crash occurs, with evidence of memory corruption suggesting that denial of service, or possible more serious impacts, may result.",
+    "simplified_description": "There is low confidence in reports about this vulnerability. While there are indications that a vulnerability might exist (like system crashes or unexpected behavior), the exact nature, cause, or impact isn't clear. Reports may be inconsistent, the issue might not be reliably reproducible, or there's significant uncertainty about what's really happening. For example, reports of occasional crashes that can't be consistently triggered, but show signs of potential security problems."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "CR",
+    "value_key": "X",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "Not Defined",
+    "official_description": "Assigning this value indicates there is insufficient information to choose one of the other values, and has no impact on the overall Environmental Score, i.e., it has the same effect on scoring as assigning Medium.",
+    "simplified_description": "The importance of confidentiality for the affected system has not been specified. When calculating scores, this has the same effect as assuming confidentiality is of moderate importance (equal to selecting 'Medium')."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "CR",
+    "value_key": "H",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "High",
+    "official_description": "Loss of Confidentiality is likely to have a catastrophic adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping information private is extremely important in this system. If confidential data is exposed, it would have devastating consequences for the organization or people connected to it (like employees or customers). This indicates systems that handle highly sensitive data where unauthorized disclosure would cause major harm."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "CR",
+    "value_key": "M",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "Medium",
+    "official_description": "Loss of Confidentiality is likely to have a serious adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping information private is moderately important in this system. If confidential data is exposed, it would have significant but not catastrophic consequences for the organization or people connected to it. This indicates systems where unauthorized disclosure would cause notable harm, but the organization could recover."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "CR",
+    "value_key": "L",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "Low",
+    "official_description": "Loss of Confidentiality is likely to have only a limited adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping information private has reduced importance in this system. If confidential data is exposed, it would have only minor consequences for the organization or people connected to it. This indicates systems where unauthorized disclosure would cause minimal harm and be relatively easy to address."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "IR",
+    "value_key": "X",
+    "metric_name": "Integrity Requirement",
+    "value_name": "Not Defined",
+    "official_description": "Assigning this value indicates there is insufficient information to choose one of the other values, and has no impact on the overall Environmental Score, i.e., it has the same effect on scoring as assigning Medium.",
+    "simplified_description": "The importance of data integrity for the affected system has not been specified. When calculating scores, this has the same effect as assuming integrity is of moderate importance (equal to selecting 'Medium')."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "IR",
+    "value_key": "H",
+    "metric_name": "Integrity Requirement",
+    "value_name": "High",
+    "official_description": "Loss of Integrity is likely to have a catastrophic adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Maintaining accurate, unaltered data is extremely important in this system. If data is modified inappropriately, it would have devastating consequences for the organization or people connected to it. This indicates systems where data tampering could cause major harm, such as financial systems, medical records, or safety-critical applications."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "IR",
+    "value_key": "M",
+    "metric_name": "Integrity Requirement",
+    "value_name": "Medium",
+    "official_description": "Loss of Integrity is likely to have a serious adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Maintaining accurate, unaltered data is moderately important in this system. If data is modified inappropriately, it would have significant but not catastrophic consequences for the organization or people connected to it. This indicates systems where data tampering would cause notable harm, but the organization could recover."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "IR",
+    "value_key": "L",
+    "metric_name": "Integrity Requirement",
+    "value_name": "Low",
+    "official_description": "Loss of Integrity is likely to have only a limited adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Maintaining accurate, unaltered data has reduced importance in this system. If data is modified inappropriately, it would have only minor consequences for the organization or people connected to it. This indicates systems where data tampering would cause minimal harm and be relatively easy to address."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AR",
+    "value_key": "X",
+    "metric_name": "Availability Requirement",
+    "value_name": "Not Defined",
+    "official_description": "Assigning this value indicates there is insufficient information to choose one of the other values, and has no impact on the overall Environmental Score, i.e., it has the same effect on scoring as assigning Medium.",
+    "simplified_description": "The importance of system availability for the affected system has not been specified. When calculating scores, this has the same effect as assuming availability is of moderate importance (equal to selecting 'Medium')."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AR",
+    "value_key": "H",
+    "metric_name": "Availability Requirement",
+    "value_name": "High",
+    "official_description": "Loss of Availability is likely to have a catastrophic adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping the system operational and accessible is extremely important. If the system becomes unavailable, it would have devastating consequences for the organization or people connected to it. This indicates systems that must function continuously with minimal downtime, such as emergency services, critical infrastructure, or life-supporting systems."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AR",
+    "value_key": "M",
+    "metric_name": "Availability Requirement",
+    "value_name": "Medium",
+    "official_description": "Loss of Availability is likely to have a serious adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping the system operational and accessible is moderately important. If the system becomes unavailable, it would have significant but not catastrophic consequences for the organization or people connected to it. This indicates systems where downtime causes notable problems, but the organization has some tolerance for interruptions."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "AR",
+    "value_key": "L",
+    "metric_name": "Availability Requirement",
+    "value_name": "Low",
+    "official_description": "Loss of Availability is likely to have only a limited adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping the system operational and accessible has reduced importance. If the system becomes unavailable, it would have only minor consequences for the organization or people connected to it. This indicates systems where downtime causes minimal problems and users can tolerate interruptions with little impact."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAV",
+    "value_key": "X",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the attack vector might be different in your particular environment has been provided. The assessment will use the original Attack Vector value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAC",
+    "value_key": "X",
+    "metric_name": "Modified Attack Complexity",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the attack complexity might be different in your particular environment has been provided. The assessment will use the original Attack Complexity value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MPR",
+    "value_key": "X",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the privileges required might be different in your particular environment has been provided. The assessment will use the original Privileges Required value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MUI",
+    "value_key": "X",
+    "metric_name": "Modified User Interaction",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how user interaction requirements might be different in your particular environment has been provided. The assessment will use the original User Interaction value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MS",
+    "value_key": "X",
+    "metric_name": "Modified Scope",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the scope of impact might be different in your particular environment has been provided. The assessment will use the original Scope value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MC",
+    "value_key": "X",
+    "metric_name": "Modified Confidentiality",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how confidentiality impacts might be different in your particular environment has been provided. The assessment will use the original Confidentiality value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MI",
+    "value_key": "X",
+    "metric_name": "Modified Integrity",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how integrity impacts might be different in your particular environment has been provided. The assessment will use the original Integrity value from the Base metric."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MA",
+    "value_key": "X",
+    "metric_name": "Modified Availability",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how availability impacts might be different in your particular environment has been provided. The assessment will use the original Availability value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AV",
+    "value_key": "N",
+    "metric_name": "Attack Vector",
+    "value_name": "Network",
+    "official_description": "The vulnerable system is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed \"remotely exploitable\" and can be thought of as an attack being exploitable at the protocol level one or more network hops away (e.g., across one or more routers). An example of a network attack is an attacker causing a denial of service (DoS) by sending a specially crafted TCP packet across a wide area network (e.g., CVE-2004-0230).",
+    "simplified_description": "The vulnerable system can be attacked over a network from any distance, including from across the entire Internet. An attacker doesn't need to be on the same local network or have physical access - they can exploit the vulnerability remotely by sending network traffic through routers. For example, someone might cause a system crash by sending specially crafted network packets from anywhere on the Internet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AV",
+    "value_key": "A",
+    "metric_name": "Attack Vector",
+    "value_name": "Adjacent",
+    "official_description": "The vulnerable system is bound to a protocol stack, but the attack is limited at the protocol level to a logically adjacent topology. This can mean an attack must be launched from the same shared proximity (e.g., Bluetooth, NFC, or IEEE 802.11) or logical network (e.g., local IP subnet), or from within a secure or otherwise limited administrative domain (e.g., MPLS, secure VPN within an administrative network zone). One example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6) flood leading to a denial of service on the local LAN segment (e.g., CVE-2013-6014).",
+    "simplified_description": "The vulnerable system can be attacked over a network, but only from nearby networks or connections. The attacker must be on the same physical network (like the same Bluetooth, NFC, or WiFi connection), the same local network segment (like the same subnet), or within the same restricted network domain (like a VPN). An example would be flooding a local network with fake address information that disrupts connections for other devices on that same network."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AV",
+    "value_key": "L",
+    "metric_name": "Attack Vector",
+    "value_name": "Local",
+    "official_description": "The vulnerable system is not bound to the network stack and the attacker's path is via read/write/execute capabilities. Either: the attacker exploits the vulnerability by accessing the target system locally (e.g., keyboard, console), or through terminal emulation (e.g., SSH); or the attacker relies on User Interaction by another person to perform actions required to exploit the vulnerability (e.g., using social engineering techniques to trick a legitimate user into opening a malicious document).",
+    "simplified_description": "The vulnerable system cannot be attacked directly over a network. Instead, the attacker needs either: (1) direct access to the system through a login session (either physically at the keyboard or through a remote terminal like SSH), or (2) to trick a legitimate user into performing certain actions (like opening a malicious file or clicking a dangerous link). This attack path requires either existing system access or human involvement."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AV",
+    "value_key": "P",
+    "metric_name": "Attack Vector",
+    "value_name": "Physical",
+    "official_description": "The attack requires the attacker to physically touch or manipulate the vulnerable system. Physical interaction may be brief (e.g., evil maid attack) or persistent. An example of such an attack is a cold boot attack in which an attacker gains access to disk encryption keys after physically accessing the target system. Other examples include peripheral attacks via FireWire/USB Direct Memory Access (DMA).",
+    "simplified_description": "The attack absolutely requires the attacker to physically touch or handle the vulnerable device. This could be brief physical contact (like quickly plugging in a malicious USB device while a computer is unattended) or longer interaction. Examples include extracting encryption keys from memory by freezing RAM chips, or using connections like FireWire/USB to directly access system memory bypassing normal security controls."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AC",
+    "value_key": "L",
+    "metric_name": "Attack Complexity",
+    "value_name": "Low",
+    "official_description": "The attacker must take no measurable action to exploit the vulnerability. The attack requires no target-specific circumvention to exploit the vulnerability. An attacker can expect repeatable success against the vulnerable system.",
+    "simplified_description": "The attack is straightforward with no special preparation needed. The attacker doesn't need to perform any additional steps or bypass any security measures to exploit the vulnerability. The attack works consistently and predictably against any instance of the vulnerable system without requiring customization or special conditions."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AC",
+    "value_key": "H",
+    "metric_name": "Attack Complexity",
+    "value_name": "High",
+    "official_description": "The successful attack depends on the evasion or circumvention of security-enhancing techniques in place that would otherwise hinder the attack. These include: Evasion of exploit mitigation techniques. The attacker must have additional methods available to bypass security measures in place. For example, circumvention of address space randomization (ASLR) or data execution prevention (DEP) must be performed for the attack to be successful. Obtaining target-specific secrets. The attacker must gather some target-specific secret before the attack can be successful. A secret is any piece of information that cannot be obtained through any amount of reconnaissance. To obtain the secret the attacker must perform additional attacks or break otherwise secure measures (e.g. knowledge of a secret key may be needed to break a crypto channel). This operation must be performed for each attacked target.",
+    "simplified_description": "The attack is complicated because it requires bypassing built-in security protections. The attacker must either: (1) evade security mechanisms designed to prevent exploits (like having to bypass ASLR which randomizes memory addresses, or DEP which prevents running code from data areas), or (2) discover secret information specific to the target that cannot be found through normal reconnaissance (such as encryption keys). These additional steps must be performed for each system being attacked, making the exploit more difficult to execute successfully."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AT",
+    "value_key": "N",
+    "metric_name": "Attack Requirements",
+    "value_name": "None",
+    "official_description": "The successful attack does not depend on the deployment and execution conditions of the vulnerable system. The attacker can expect to be able to reach the vulnerability and execute the exploit under all or most instances of the vulnerability.",
+    "simplified_description": "The attack doesn't depend on any special conditions or circumstances to succeed. The vulnerability can be exploited in virtually any environment where the vulnerable system exists, without relying on specific configurations, timing, or deployment scenarios. The attacker can reliably execute the attack against almost any instance of the vulnerable system."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AT",
+    "value_key": "P",
+    "metric_name": "Attack Requirements",
+    "value_name": "Present",
+    "official_description": "The successful attack depends on the presence of specific deployment and execution conditions of the vulnerable system that enable the attack. These include: A race condition must be won to successfully exploit the vulnerability. The successfulness of the attack is conditioned on execution conditions that are not under full control of the attacker. The attack may need to be launched multiple times against a single target before being successful. Network injection. The attacker must inject themselves into the logical network path between the target and the resource requested by the victim (e.g. vulnerabilities requiring an on-path attacker).",
+    "simplified_description": "The attack requires specific conditions that aren't always present. Success depends on either: (1) winning a race condition where timing is critical and not fully controllable (possibly requiring multiple attempts to succeed), or (2) being positioned in the network path between the target and another system (known as 'man-in-the-middle' position). These requirements mean the attack won't work in all deployment scenarios and might need specific environmental conditions or repeated attempts to succeed."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "PR",
+    "value_key": "N",
+    "metric_name": "Privileges Required",
+    "value_name": "None",
+    "official_description": "The attacker is unauthenticated prior to attack, and therefore does not require any access to settings or files of the vulnerable system to carry out an attack.",
+    "simplified_description": "The attacker doesn't need any prior access to the system to exploit the vulnerability. The attack can be carried out from a position of no authorization or privileges whatsoever - a complete outsider can execute the attack without first needing to gain any form of access, credentials, or permissions on the vulnerable system."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "PR",
+    "value_key": "L",
+    "metric_name": "Privileges Required",
+    "value_name": "Low",
+    "official_description": "The attacker requires privileges that provide basic capabilities that are typically limited to settings and resources owned by a single low-privileged user. Alternatively, an attacker with Low privileges has the ability to access only non-sensitive resources.",
+    "simplified_description": "The attacker needs basic user-level access to the system before exploiting the vulnerability. This means they must have standard user account privileges that allow them to affect only their own files and settings, or access only non-sensitive resources. Typical basic user accounts with restricted permissions would be sufficient to launch the attack."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "PR",
+    "value_key": "H",
+    "metric_name": "Privileges Required",
+    "value_name": "High",
+    "official_description": "The attacker requires privileges that provide significant (e.g., administrative) control over the vulnerable system allowing full access to the vulnerable system's settings and files.",
+    "simplified_description": "The attacker needs administrative-level access to the system before exploiting the vulnerability. This means they must already have significant privileges that allow them to control system-wide settings and access protected files. Typical administrative accounts (like a system administrator, root, or admin user) would be necessary to launch the attack."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "UI",
+    "value_key": "N",
+    "metric_name": "User Interaction",
+    "value_name": "None",
+    "official_description": "The vulnerable system can be exploited without interaction from any human user, other than the attacker. Examples include: a remote attacker is able to send packets to a target system a locally authenticated attacker executes code to elevate privileges",
+    "simplified_description": "The attack can proceed without requiring any human (other than the attacker) to take action. For example, an attacker might send specially crafted network packets directly to a vulnerable server, or run a command to increase their privileges on a system where they already have access. No clicking, opening files, or other user actions are needed for the attack to succeed."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "UI",
+    "value_key": "P",
+    "metric_name": "User Interaction",
+    "value_name": "Passive",
+    "official_description": "Successful exploitation of this vulnerability requires limited interaction by the targeted user with the vulnerable system and the attacker's payload. These interactions would be considered involuntary and do not require that the user actively subvert protections built into the vulnerable system. Examples include: utilizing a website that has been modified to display malicious content when the page is rendered (most stored XSS or CSRF) running an application that calls a malicious binary that has been planted on the system using an application which generates traffic over an untrusted or compromised network (vulnerabilities requiring an on-path attacker)",
+    "simplified_description": "The attack requires some user interaction, but in ways users wouldn't recognize as risky. Users don't need to bypass any security warnings or take unusual actions - they simply perform normal activities like: visiting a legitimate but compromised website that silently runs malicious code, using an application that has been compromised to run malicious components in the background, or using a network application while an attacker intercepts the traffic. The user's normal behavior unknowingly enables the attack."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "UI",
+    "value_key": "A",
+    "metric_name": "User Interaction",
+    "value_name": "Active",
+    "official_description": "Successful exploitation of this vulnerability requires a targeted user to perform specific, conscious interactions with the vulnerable system and the attacker's payload, or the user's interactions would actively subvert protection mechanisms which would lead to exploitation of the vulnerability. Examples include: importing a file into a vulnerable system in a specific manner placing files into a specific directory prior to executing code submitting a specific string into a web application (e.g. reflected or self XSS) dismiss or accept prompts or security warnings prior to taking an action (e.g. opening/editing a file, connecting a device).",
+    "simplified_description": "The attack requires a user to perform specific, deliberate actions that are outside normal routine behavior. Users need to make conscious choices like: importing files in particular ways, placing files in specific locations, entering certain text into websites, or dismissing security warnings. These actions often involve users making decisions that bypass security controls or consciously taking steps that enable the attack to succeed."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VC",
+    "value_key": "H",
+    "metric_name": "Vulnerable System Confidentiality",
+    "value_name": "High",
+    "official_description": "There is a total loss of confidentiality, resulting in all information within the Vulnerable System being divulged to the attacker. Alternatively, access to only some restricted information is obtained, but the disclosed information presents a direct, serious impact. For example, an attacker steals the administrator's password, or private encryption keys of a web server.",
+    "simplified_description": "The attack exposes highly sensitive information in the vulnerable system itself. Either all data within the system becomes accessible to the attacker (a complete breach), or specific critical information is exposed that has serious direct consequences. Examples include stealing administrative passwords or accessing private encryption keys that could compromise all secure communications."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VC",
+    "value_key": "L",
+    "metric_name": "Vulnerable System Confidentiality",
+    "value_name": "Low",
+    "official_description": "There is some loss of confidentiality. Access to some restricted information is obtained, but the attacker does not have control over what information is obtained, or the amount or kind of loss is limited. The information disclosure does not cause a direct, serious loss to the Vulnerable System.",
+    "simplified_description": "The attack exposes some sensitive information in the vulnerable system itself, but in a limited way. The attacker gains access to some restricted data, but either cannot control exactly what information they obtain, or the information exposed doesn't pose a serious direct risk. For example, revealing non-critical configuration settings, logs, or limited user data that doesn't cause significant harm."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VC",
+    "value_key": "N",
+    "metric_name": "Vulnerable System Confidentiality",
+    "value_name": "None",
+    "official_description": "There is no loss of confidentiality within the Vulnerable System.",
+    "simplified_description": "The attack doesn't expose any sensitive information within the vulnerable system itself. No confidential data is revealed to unauthorized parties as a result of the vulnerability being exploited in the primary system."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VI",
+    "value_key": "H",
+    "metric_name": "Vulnerable System Integrity",
+    "value_name": "High",
+    "official_description": "There is a total loss of integrity, or a complete loss of protection. For example, the attacker is able to modify any/all files protected by the Vulnerable System. Alternatively, only some files can be modified, but malicious modification would present a direct, serious consequence to the Vulnerable System.",
+    "simplified_description": "The attack allows severe tampering with data in the vulnerable system itself. Either the attacker can modify any/all protected files and data (complete compromise), or they can make specific changes that directly cause serious consequences. This means the system can no longer trust the accuracy of its own data, potentially leading to incorrect operation or further security compromises."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VI",
+    "value_key": "L",
+    "metric_name": "Vulnerable System Integrity",
+    "value_name": "Low",
+    "official_description": "Modification of data is possible, but the attacker does not have control over the consequence of a modification, or the amount of modification is limited. The data modification does not have a direct, serious impact to the Vulnerable System.",
+    "simplified_description": "The attack allows some tampering with data in the vulnerable system itself, but in a limited way. The attacker can make some unauthorized changes, but either cannot control exactly what can be modified, or the possible changes don't pose a serious direct risk. For example, altering non-critical settings, logs, or limited data that doesn't cause significant harm to the system's operation."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VI",
+    "value_key": "N",
+    "metric_name": "Vulnerable System Integrity",
+    "value_name": "None",
+    "official_description": "There is no loss of integrity within the Vulnerable System.",
+    "simplified_description": "The attack doesn't allow any tampering with data in the vulnerable system itself. No files, settings, or other information can be changed or modified as a result of the vulnerability being exploited in the primary system."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VA",
+    "value_key": "H",
+    "metric_name": "Vulnerable System Availability",
+    "value_name": "High",
+    "official_description": "There is a total loss of availability, resulting in the attacker being able to fully deny access to resources in the Vulnerable System; this loss is either sustained (while the attacker continues to deliver the attack) or persistent (the condition persists even after the attack has completed). Alternatively, the attacker has the ability to deny some availability, but the loss of availability presents a direct, serious consequence to the Vulnerable System (e.g., the attacker cannot disrupt existing connections, but can prevent new connections; the attacker can repeatedly exploit a vulnerability that, in each instance of a successful attack, leaks a only small amount of memory, but after repeated exploitation causes a service to become completely unavailable).",
+    "simplified_description": "The attack severely disrupts the functioning of the vulnerable system itself. Either the system becomes completely unavailable (a total outage that continues during the attack or persists afterward), or a significant part of its functionality is disabled in a way that has serious consequences. Examples include preventing all new connections, or gradually degrading system resources until the system crashes completely."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VA",
+    "value_key": "L",
+    "metric_name": "Vulnerable System Availability",
+    "value_name": "Low",
+    "official_description": "Performance is reduced or there are interruptions in resource availability. Even if repeated exploitation of the vulnerability is possible, the attacker does not have the ability to completely deny service to legitimate users. The resources in the Vulnerable System are either partially available all of the time, or fully available only some of the time, but overall there is no direct, serious consequence to the Vulnerable System.",
+    "simplified_description": "The attack causes minor disruption to the functioning of the vulnerable system itself. The system might experience reduced performance, brief interruptions, or limited access to some features, but it isn't completely disabled. Users can still access the system and its main functions, though perhaps more slowly or with occasional pauses. The disruption, while noticeable, doesn't severely impact overall operations."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "VA",
+    "value_key": "N",
+    "metric_name": "Vulnerable System Availability",
+    "value_name": "None",
+    "official_description": "There is no impact to availability within the Vulnerable System.",
+    "simplified_description": "The attack doesn't disrupt the functioning of the vulnerable system itself. There is no slowdown, interruption, or denial of service to the primary system as a result of the vulnerability being exploited."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SC",
+    "value_key": "H",
+    "metric_name": "Subsequent System Confidentiality",
+    "value_name": "High",
+    "official_description": "There is a total loss of confidentiality, resulting in all resources within the Subsequent System being divulged to the attacker. Alternatively, access to only some restricted information is obtained, but the disclosed information presents a direct, serious impact. For example, an attacker steals the administrator's password, or private encryption keys of a web server.",
+    "simplified_description": "The attack exposes highly sensitive information in other connected systems beyond the initially vulnerable one. Either all data in these other systems becomes accessible (a complete breach), or specific critical information is exposed that has serious consequences. For example, a vulnerability in one application might be leveraged to steal admin credentials or encryption keys from other systems in the environment."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SC",
+    "value_key": "L",
+    "metric_name": "Subsequent System Confidentiality",
+    "value_name": "Low",
+    "official_description": "There is some loss of confidentiality. Access to some restricted information is obtained, but the attacker does not have control over what information is obtained, or the amount or kind of loss is limited. The information disclosure does not cause a direct, serious loss to the Subsequent System.",
+    "simplified_description": "The attack exposes some sensitive information in other connected systems beyond the initially vulnerable one, but in a limited way. The attacker gains access to some restricted data in these other systems, but either cannot control exactly what they can view, or the information exposed doesn't pose a serious risk. The impact extends beyond the vulnerable system but remains limited in its consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SC",
+    "value_key": "N",
+    "metric_name": "Subsequent System Confidentiality",
+    "value_name": "None",
+    "official_description": "There is no loss of confidentiality within the Subsequent System or all confidentiality impact is constrained to the Vulnerable System.",
+    "simplified_description": "The attack doesn't expose any sensitive information in other connected systems. Any confidentiality impact is limited to the initially vulnerable system itself, with no information leakage affecting other systems or components in the environment."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SI",
+    "value_key": "H",
+    "metric_name": "Subsequent System Integrity",
+    "value_name": "High",
+    "official_description": "There is a total loss of integrity, or a complete loss of protection. For example, the attacker is able to modify any/all files protected by the Subsequent System. Alternatively, only some files can be modified, but malicious modification would present a direct, serious consequence to the Subsequent System.",
+    "simplified_description": "The attack allows severe tampering with data in other connected systems beyond the initially vulnerable one. Either the attacker can modify any/all protected files and data in these other systems, or they can make specific changes that directly cause serious consequences. The impact extends beyond the vulnerable system, potentially compromising the trustworthiness of data in related systems or components."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SI",
+    "value_key": "L",
+    "metric_name": "Subsequent System Integrity",
+    "value_name": "Low",
+    "official_description": "Modification of data is possible, but the attacker does not have control over the consequence of a modification, or the amount of modification is limited. The data modification does not have a direct, serious impact to the Subsequent System.",
+    "simplified_description": "The attack allows some tampering with data in other connected systems beyond the initially vulnerable one, but in a limited way. The attacker can make some unauthorized changes to these other systems, but either cannot control exactly what they can modify, or the possible changes don't pose a serious risk. The impact extends beyond the vulnerable system but remains limited in its consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SI",
+    "value_key": "N",
+    "metric_name": "Subsequent System Integrity",
+    "value_name": "None",
+    "official_description": "There is no loss of integrity within the Subsequent System or all integrity impact is constrained to the Vulnerable System.",
+    "simplified_description": "The attack doesn't allow any tampering with data in other connected systems. Any integrity impact is limited to the initially vulnerable system itself, with no unauthorized modifications affecting other systems or components in the environment."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SA",
+    "value_key": "H",
+    "metric_name": "Subsequent System Availability",
+    "value_name": "High",
+    "official_description": "There is a total loss of availability, resulting in the attacker being able to fully deny access to resources in the Subsequent System; this loss is either sustained (while the attacker continues to deliver the attack) or persistent (the condition persists even after the attack has completed). Alternatively, the attacker has the ability to deny some availability, but the loss of availability presents a direct, serious consequence to the Subsequent System (e.g., the attacker cannot disrupt existing connections, but can prevent new connections; the attacker can repeatedly exploit a vulnerability that, in each instance of a successful attack, leaks a only small amount of memory, but after repeated exploitation causes a service to become completely unavailable).",
+    "simplified_description": "The attack severely disrupts the functioning of other connected systems beyond the initially vulnerable one. Either these other systems become completely unavailable, or a significant part of their functionality is disabled in a way that has serious consequences. For example, a vulnerability in one application might be leveraged to cause a complete outage of other critical systems in the environment."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SA",
+    "value_key": "L",
+    "metric_name": "Subsequent System Availability",
+    "value_name": "Low",
+    "official_description": "Performance is reduced or there are interruptions in resource availability. Even if repeated exploitation of the vulnerability is possible, the attacker does not have the ability to completely deny service to legitimate users. The resources in the Subsequent System are either partially available all of the time, or fully available only some of the time, but overall there is no direct, serious consequence to the Subsequent System.",
+    "simplified_description": "The attack causes minor disruption to the functioning of other connected systems beyond the initially vulnerable one. These other systems might experience reduced performance, brief interruptions, or limited access to some features, but they aren't completely disabled. The impact extends beyond the vulnerable system but remains limited in its consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "SA",
+    "value_key": "N",
+    "metric_name": "Subsequent System Availability",
+    "value_name": "None",
+    "official_description": "There is no impact to availability within the Subsequent System or all availability impact is constrained to the Vulnerable System.",
+    "simplified_description": "The attack doesn't disrupt the functioning of other connected systems. Any availability impact is limited to the initially vulnerable system itself, with no service disruptions affecting other systems or components in the environment."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "E",
+    "value_key": "X",
+    "metric_name": "Exploit Maturity",
+    "value_name": "Not Defined",
+    "official_description": "Reliable threat intelligence is not available to determine Exploit Maturity characteristics. This is the default value and is equivalent to Attacked (A) for the purposes of the calculation of the score by assuming the worst case.",
+    "simplified_description": "There isn't reliable information about how actively this vulnerability is being exploited. When calculating risk scores, this defaults to assuming the worst case - that attacks are actively occurring (equivalent to selecting 'Attacked')."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "E",
+    "value_key": "A",
+    "metric_name": "Exploit Maturity",
+    "value_name": "Attacked",
+    "official_description": "Based on available threat intelligence either of the following must apply: Attacks targeting this vulnerability (attempted or successful) have been reported Solutions to simplify attempts to exploit the vulnerability are publicly or privately available (such as exploit toolkits)",
+    "simplified_description": "This vulnerability is actively being exploited in the real world or ready-to-use attack tools exist. Either: (1) there are confirmed reports of actual attacks targeting this vulnerability, or (2) exploit code or tools specifically designed to exploit this vulnerability are available to attackers. This represents a high level of real-world threat activity."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "E",
+    "value_key": "P",
+    "metric_name": "Exploit Maturity",
+    "value_name": "Proof-of-Concept",
+    "official_description": "Based on available threat intelligence each of the following must apply: Proof-of-concept exploit code is publicly available No knowledge of reported attempts to exploit this vulnerability No knowledge of publicly available solutions used to simplify attempts to exploit the vulnerability (i.e., the \"Attacked\" value does not apply)",
+    "simplified_description": "Basic demonstration code exists that proves the vulnerability is exploitable, but there's no evidence of actual attacks. There is publicly available code showing how the vulnerability might be exploited, but it's likely limited to test environments or specific conditions. No actual attacks have been reported, and no ready-to-use attack tools exist yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "E",
+    "value_key": "U",
+    "metric_name": "Exploit Maturity",
+    "value_name": "Unreported",
+    "official_description": "Based on available threat intelligence each of the following must apply: No knowledge of publicly available proof-of-concept exploit code No knowledge of reported attempts to exploit this vulnerability No knowledge of publicly available solutions used to simplify attempts to exploit the vulnerability (i.e., neither the \"POC\" nor \"Attacked\" values apply)",
+    "simplified_description": "There's no evidence of any exploitation activity for this vulnerability. No proof-of-concept code has been published, no attacks have been reported, and no tools to simplify exploitation are known to exist. While the vulnerability exists, there's no indication that anyone is actively trying to exploit it yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "CR",
+    "value_key": "X",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "Not Defined",
+    "official_description": "This is the default value. Assigning this value indicates there is insufficient information to choose one of the other values. This has the same effect as assigning High as the worst case.",
+    "simplified_description": "The importance of confidentiality for the affected system has not been specified. When calculating scores, this defaults to assuming confidentiality is of highest importance (equal to selecting 'High')."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "CR",
+    "value_key": "H",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "High",
+    "official_description": "Loss of Confidentiality is likely to have a catastrophic adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping information private is extremely important in this system. If confidential data is exposed, it would have devastating consequences for the organization or people connected to it (like employees or customers). This indicates systems that handle highly sensitive data where unauthorized disclosure would cause major harm."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "CR",
+    "value_key": "M",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "Medium",
+    "official_description": "Loss of Confidentiality is likely to have a serious adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping information private is moderately important in this system. If confidential data is exposed, it would have significant but not catastrophic consequences for the organization or people connected to it. This indicates systems where unauthorized disclosure would cause notable harm, but the organization could recover."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "CR",
+    "value_key": "L",
+    "metric_name": "Confidentiality Requirement",
+    "value_name": "Low",
+    "official_description": "Loss of Confidentiality is likely to have only a limited adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping information private has reduced importance in this system. If confidential data is exposed, it would have only minor consequences for the organization or people connected to it. This indicates systems where unauthorized disclosure would cause minimal harm and be relatively easy to address."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "IR",
+    "value_key": "X",
+    "metric_name": "Integrity Requirement",
+    "value_name": "Not Defined",
+    "official_description": "This is the default value. Assigning this value indicates there is insufficient information to choose one of the other values. This has the same effect as assigning High as the worst case.",
+    "simplified_description": "The importance of data integrity for the affected system has not been specified. When calculating scores, this defaults to assuming integrity is of highest importance (equal to selecting 'High')."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "IR",
+    "value_key": "H",
+    "metric_name": "Integrity Requirement",
+    "value_name": "High",
+    "official_description": "Loss of Integrity is likely to have a catastrophic adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Maintaining accurate, unaltered data is extremely important in this system. If data is modified inappropriately, it would have devastating consequences for the organization or people connected to it. This indicates systems where data tampering could cause major harm, such as financial systems, medical records, or safety-critical applications."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "IR",
+    "value_key": "M",
+    "metric_name": "Integrity Requirement",
+    "value_name": "Medium",
+    "official_description": "Loss of Integrity is likely to have a serious adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Maintaining accurate, unaltered data is moderately important in this system. If data is modified inappropriately, it would have significant but not catastrophic consequences for the organization or people connected to it. This indicates systems where data tampering would cause notable harm, but the organization could recover."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "IR",
+    "value_key": "L",
+    "metric_name": "Integrity Requirement",
+    "value_name": "Low",
+    "official_description": "Loss of Integrity is likely to have only a limited adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Maintaining accurate, unaltered data has reduced importance in this system. If data is modified inappropriately, it would have only minor consequences for the organization or people connected to it. This indicates systems where data tampering would cause minimal harm and be relatively easy to address."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AR",
+    "value_key": "X",
+    "metric_name": "Availability Requirement",
+    "value_name": "Not Defined",
+    "official_description": "This is the default value. Assigning this value indicates there is insufficient information to choose one of the other values. This has the same effect as assigning High as the worst case.",
+    "simplified_description": "The importance of system availability for the affected system has not been specified. When calculating scores, this defaults to assuming availability is of highest importance (equal to selecting 'High')."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AR",
+    "value_key": "H",
+    "metric_name": "Availability Requirement",
+    "value_name": "High",
+    "official_description": "Loss of Availability is likely to have a catastrophic adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping the system operational and accessible is extremely important. If the system becomes unavailable, it would have devastating consequences for the organization or people connected to it. This indicates systems that must function continuously with minimal downtime, such as emergency services, critical infrastructure, or life-supporting systems."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AR",
+    "value_key": "M",
+    "metric_name": "Availability Requirement",
+    "value_name": "Medium",
+    "official_description": "Loss of Availability is likely to have a serious adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping the system operational and accessible is moderately important. If the system becomes unavailable, it would have significant but not catastrophic consequences for the organization or people connected to it. This indicates systems where downtime causes notable problems, but the organization has some tolerance for interruptions."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AR",
+    "value_key": "L",
+    "metric_name": "Availability Requirement",
+    "value_name": "Low",
+    "official_description": "Loss of Availability is likely to have only a limited adverse effect on the organization or individuals associated with the organization (e.g., employees, customers).",
+    "simplified_description": "Keeping the system operational and accessible has reduced importance. If the system becomes unavailable, it would have only minor consequences for the organization or people connected to it. This indicates systems where downtime causes minimal problems and users can tolerate interruptions with little impact."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAV",
+    "value_key": "X",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the attack path might be different in your particular environment has been provided. The assessment will use the original Attack Vector value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAC",
+    "value_key": "X",
+    "metric_name": "Modified Attack Complexity",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the attack complexity might be different in your particular environment has been provided. The assessment will use the original Attack Complexity value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAT",
+    "value_key": "X",
+    "metric_name": "Modified Attack Requirements",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how attack requirements might be different in your particular environment has been provided. The assessment will use the original Attack Requirements value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MPR",
+    "value_key": "X",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the privileges required might be different in your particular environment has been provided. The assessment will use the original Privileges Required value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MUI",
+    "value_key": "X",
+    "metric_name": "Modified User Interaction",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how user interaction requirements might be different in your particular environment has been provided. The assessment will use the original User Interaction value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVC",
+    "value_key": "X",
+    "metric_name": "Modified Vulnerable System Confidentiality",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the confidentiality impact on the vulnerable system might be different in your particular environment has been provided. The assessment will use the original Vulnerable System Confidentiality value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVI",
+    "value_key": "X",
+    "metric_name": "Modified Vulnerable System Integrity",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the integrity impact on the vulnerable system might be different in your particular environment has been provided. The assessment will use the original Vulnerable System Integrity value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVA",
+    "value_key": "X",
+    "metric_name": "Modified Vulnerable System Availability",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the availability impact on the vulnerable system might be different in your particular environment has been provided. The assessment will use the original Vulnerable System Availability value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSC",
+    "value_key": "X",
+    "metric_name": "Modified Subsequent System Confidentiality",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the confidentiality impact on connected systems might be different in your particular environment has been provided. The assessment will use the original Subsequent System Confidentiality value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSI",
+    "value_key": "X",
+    "metric_name": "Modified Subsequent System Integrity",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the integrity impact on connected systems might be different in your particular environment has been provided. The assessment will use the original Subsequent System Integrity value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSI",
+    "value_key": "S",
+    "metric_name": "Modified Subsequent System Integrity",
+    "value_name": "Safety",
+    "official_description": "If the exploitation of a technical vulnerability (with impact to either the availability or integrity of the vulnerable system) has the potential to impact human safety, the modified subsequent system impact of Safety (s) should be used.",
+    "simplified_description": "Exploiting this vulnerability could potentially harm human safety. This special value indicates that the vulnerability, when exploited, could put people at physical risk of injury or harm. It's used when technical security impacts (especially to integrity or availability) might have real-world consequences for human safety."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSA",
+    "value_key": "X",
+    "metric_name": "Modified Subsequent System Availability",
+    "value_name": "Not Defined",
+    "official_description": "The value assigned to the corresponding Base metric is used.",
+    "simplified_description": "No specific information about how the availability impact on connected systems might be different in your particular environment has been provided. The assessment will use the original Subsequent System Availability value from the Base metric."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSA",
+    "value_key": "S",
+    "metric_name": "Modified Subsequent System Availability",
+    "value_name": "Safety",
+    "official_description": "If the exploitation of a technical vulnerability (with impact to either the availability or integrity of the vulnerable system) has the potential to impact human safety, the modified subsequent system impact of Safety (s) should be used.",
+    "simplified_description": "Exploiting this vulnerability could potentially harm human safety. This special value indicates that the vulnerability, when exploited, could put people at physical risk of injury or harm. It's used when technical security impacts (especially to integrity or availability) might have real-world consequences for human safety."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "S",
+    "value_key": "X",
+    "metric_name": "Safety",
+    "value_name": "Not Defined",
+    "official_description": "The metric has not been evaluated.",
+    "simplified_description": "No assessment has been made about whether this vulnerability could affect human safety. This doesn't mean there's no safety impact - it just means this aspect hasn't been evaluated yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "S",
+    "value_key": "P",
+    "metric_name": "Safety",
+    "value_name": "Present",
+    "official_description": "Consequences of the vulnerability meet definition of IEC 61508 consequence categories of \"marginal,\" \"critical,\" or \"catastrophic.\"",
+    "simplified_description": "This vulnerability could threaten human safety, with potential consequences ranging from major injuries to loss of life. The safety impact meets industrial safety standards for significant hazards (specifically the IEC 61508 categories of 'marginal', 'critical', or 'catastrophic')."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "S",
+    "value_key": "N",
+    "metric_name": "Safety",
+    "value_name": "Negligible",
+    "official_description": "Consequences of the vulnerability meet definition of IEC 61508 consequence category \"negligible.\"",
+    "simplified_description": "Any safety impact from this vulnerability would be minor or negligible. While there might be some minimal safety concerns, they would result in minor injuries at worst, according to industrial safety standards (specifically the IEC 61508 'negligible' category)."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AU",
+    "value_key": "X",
+    "metric_name": "Automatable",
+    "value_name": "Not Defined",
+    "official_description": "The metric has not been evaluated.",
+    "simplified_description": "No assessment has been made about whether attacks using this vulnerability can be automated. This doesn't indicate either way - it just means this aspect hasn't been evaluated yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AU",
+    "value_key": "N",
+    "metric_name": "Automatable",
+    "value_name": "No",
+    "official_description": "Attackers cannot reliably automate all 4 steps of the kill chain for this vulnerability for some reason. These steps are reconnaissance, weaponization, delivery, and exploitation.",
+    "simplified_description": "This vulnerability cannot be reliably exploited through automated attacks. For some reason, attackers cannot create a fully automated process that handles all phases of the attack (finding targets, creating attack code, delivering it, and executing it). This limitation reduces the likelihood of widespread attacks since each attack requires human involvement at some point."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "AU",
+    "value_key": "Y",
+    "metric_name": "Automatable",
+    "value_name": "Yes",
+    "official_description": "Attackers can reliably automate all 4 steps of the kill chain. These steps are reconnaissance, weaponization, delivery, and exploitation (e.g., the vulnerability is \"wormable\").",
+    "simplified_description": "This vulnerability can be fully exploited through automated attacks. Attackers can create programs that automatically handle every phase of the attack: identifying vulnerable targets, creating attack code, delivering it to targets, and executing the exploit without human intervention. This makes widespread attacks much more likely, as in the case of self-spreading malware like worms."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "U",
+    "value_key": "X",
+    "metric_name": "Provider Urgency",
+    "value_name": "Not Defined",
+    "official_description": "The metric has not been evaluated.",
+    "simplified_description": "The software/hardware provider hasn't specified how urgently this vulnerability should be addressed. No priority level has been assigned by the vendor or maintainer of the affected product."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "U",
+    "value_key": "Red",
+    "metric_name": "Provider Urgency",
+    "value_name": "Red",
+    "official_description": "Provider has assessed the impact of this vulnerability as having the highest urgency.",
+    "simplified_description": "The software/hardware provider considers this vulnerability extremely urgent to fix. The vendor or maintainer has assigned their highest priority level to this issue, indicating it should be addressed immediately."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "U",
+    "value_key": "Amber",
+    "metric_name": "Provider Urgency",
+    "value_name": "Amber",
+    "official_description": "Provider has assessed the impact of this vulnerability as having a moderate urgency.",
+    "simplified_description": "The software/hardware provider considers this vulnerability moderately urgent to fix. The vendor or maintainer has assigned a medium priority level to this issue, indicating it's important but not their highest concern."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "U",
+    "value_key": "Green",
+    "metric_name": "Provider Urgency",
+    "value_name": "Green",
+    "official_description": "Provider has assessed the impact of this vulnerability as having a reduced urgency.",
+    "simplified_description": "The software/hardware provider considers this vulnerability less urgent to fix. The vendor or maintainer has assigned a lower priority level to this issue, indicating it can be addressed as part of normal update cycles."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "U",
+    "value_key": "Clear",
+    "metric_name": "Provider Urgency",
+    "value_name": "Clear",
+    "official_description": "Provider has assessed the impact of this vulnerability as having no urgency (Informational).",
+    "simplified_description": "The software/hardware provider considers this vulnerability to have minimal urgency. The vendor or maintainer has indicated this is primarily informational and doesn't require specific action beyond normal awareness."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "R",
+    "value_key": "X",
+    "metric_name": "Recovery",
+    "value_name": "Not Defined",
+    "official_description": "The metric has not been evaluated.",
+    "simplified_description": "No assessment has been made about how systems recover after this vulnerability is exploited. This doesn't indicate either way - it just means this aspect hasn't been evaluated yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "R",
+    "value_key": "A",
+    "metric_name": "Recovery",
+    "value_name": "Automatic",
+    "official_description": "The system recovers services automatically after an attack has been performed.",
+    "simplified_description": "After this vulnerability is exploited, the affected system can recover on its own without human intervention. Normal service or functionality automatically returns without requiring administrator or user actions to restore operations."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "R",
+    "value_key": "U",
+    "metric_name": "Recovery",
+    "value_name": "User",
+    "official_description": "The system requires manual intervention by the user to recover services, after an attack has been performed.",
+    "simplified_description": "After this vulnerability is exploited, the affected system needs human intervention to recover. A system administrator or user must take specific actions to restore normal operations, such as restarting services, clearing error conditions, or resetting configurations."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "R",
+    "value_key": "I",
+    "metric_name": "Recovery",
+    "value_name": "Irrecoverable",
+    "official_description": "The system services are irrecoverable by the user, after an attack has been performed.",
+    "simplified_description": "After this vulnerability is exploited, the affected system cannot be restored to normal operation through standard means. The damage is permanent or requires extraordinary measures beyond typical system administration tasks, such as reinstalling the system, replacing hardware, or restoring from backups."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "V",
+    "value_key": "X",
+    "metric_name": "Value Density",
+    "value_name": "Not Defined",
+    "official_description": "The metric has not been evaluated.",
+    "simplified_description": "No assessment has been made about the concentration of valuable resources accessible through this vulnerability. This doesn't indicate either way - it just means this aspect hasn't been evaluated yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "V",
+    "value_key": "D",
+    "metric_name": "Value Density",
+    "value_name": "Diffuse",
+    "official_description": "The vulnerable system has limited resources. That is, the resources that the attacker will gain control over with a single exploitation event are relatively small. An example of Diffuse (think: limited) Value Density would be an attack on a single email client vulnerability.",
+    "simplified_description": "Exploiting this vulnerability gives an attacker access to limited resources or value. A single successful attack yields relatively modest gains, similar to compromising a single user's email client. The attacker would need to exploit many individual systems to accumulate significant resources or access."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "V",
+    "value_key": "C",
+    "metric_name": "Value Density",
+    "value_name": "Concentrated",
+    "official_description": "The vulnerable system is rich in resources. Heuristically, such systems are often the direct responsibility of \"system operators\" rather than users. An example of Concentrated (think: broad) Value Density would be an attack on a central email server.",
+    "simplified_description": "Exploiting this vulnerability gives an attacker access to significant resources or value. A single successful attack yields substantial gains, similar to compromising a central email server that holds data for many users. These are typically systems managed by IT administrators rather than individual users, and a single compromise provides access to concentrated valuable assets."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "RE",
+    "value_key": "X",
+    "metric_name": "Vulnerability Response Effort",
+    "value_name": "Not Defined",
+    "official_description": "The metric has not been evaluated.",
+    "simplified_description": "No assessment has been made about how much effort is required to respond to this vulnerability. This doesn't indicate either way - it just means this aspect hasn't been evaluated yet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "RE",
+    "value_key": "L",
+    "metric_name": "Vulnerability Response Effort",
+    "value_name": "Low",
+    "official_description": "The effort required to respond to a vulnerability is low/trivial. Examples include: communication on better documentation, configuration workarounds, or guidance from the vendor that does not require an immediate update, upgrade, or replacement by the consuming entity, such as firewall filter configuration.",
+    "simplified_description": "Fixing or mitigating this vulnerability requires minimal effort. Organizations can respond with simple actions like applying configuration changes, implementing minor adjustments like firewall rules, or following straightforward guidance from the vendor. These responses don't require significant system changes, rarely cause service disruption, and can typically be implemented quickly with minimal testing or planning."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "RE",
+    "value_key": "M",
+    "metric_name": "Vulnerability Response Effort",
+    "value_name": "Moderate",
+    "official_description": "The actions required to respond to a vulnerability require some effort on behalf of the consumer and could cause minimal service impact to implement. Examples include: simple remote update, disabling of a subsystem, or a low-touch software upgrade such as a driver update.",
+    "simplified_description": "Fixing or mitigating this vulnerability requires moderate effort. Organizations need to perform actions like applying standard updates, disabling certain features, or installing driver updates. These responses involve some planning and may cause brief service interruptions, but are still relatively straightforward for IT staff to implement without extensive specialized knowledge."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "RE",
+    "value_key": "H",
+    "metric_name": "Vulnerability Response Effort",
+    "value_name": "High",
+    "official_description": "The actions required to respond to a vulnerability are significant and/or difficult, and may possibly lead to an extended, scheduled service impact. This would need to be considered for scheduling purposes including honoring any embargo on deployment of the selected response.  Alternatively, response to the vulnerability in the field is not possible remotely. The only resolution to the vulnerability involves physical replacement (e.g. units deployed would have to be recalled for a depot level repair or replacement). Examples include: a highly privileged driver update, microcode or UEFI BIOS updates, or software upgrades requiring careful analysis and understanding of any potential infrastructure impact before implementation. A UEFI BIOS update that impacts Trusted Platform Module (TPM) attestation without impacting disk encryption software such as Bit locker is a good recent example. Irreparable failures such as non-bootable flash subsystems, failed disks or solid-state drives (SSD), bad memory modules, network devices, or other non-recoverable under warranty hardware, should also be scored as having a High effort.",
+    "simplified_description": "Fixing or mitigating this vulnerability requires significant effort. Organizations need to perform complex actions like updating low-level system components (BIOS, firmware), making changes that require extensive testing, or even physically replacing hardware. These responses typically require specialized expertise, careful planning, scheduled downtime, and may involve substantial business disruption. Examples include firmware updates that affect security features, or cases where physical device replacement is the only solution."
+  }
+]

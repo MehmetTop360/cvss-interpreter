@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16.1-alpine
+    environment:
+      POSTGRES_USER: mehmet
+      POSTGRES_PASSWORD: mehmet
+      POSTGRES_DB: ex
+    ports:
+      - "5432"
+    volumes:
+      - ex-db:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: .
+      dockerfile: ./server/dockerfile
+
+    environment:
+      DB_HOST: postgres
+      DB_USER: mehmet
+      DB_PASSWORD: mehmet
+      DB_NAME: ex
+      PORT: 3000
+    ports:
+      - "3000"
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: .
+      dockerfile: ./client/dockerfile
+      args:
+        VITE_API_ORIGIN: http://localhost:3001
+        VITE_API_PATH: /api/v1/trpc
+    environment:
+      API_PROXY_PASS: http://server:3000
+    ports:
+      - "3001:80"
+    depends_on:
+      - server
+
+volumes:
+  ex-db:

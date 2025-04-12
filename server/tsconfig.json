@@ -1,0 +1,29 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests"],
+  "compilerOptions": {
+    "baseUrl": ".",
+
+    "rootDir": ".",
+    "outDir": "./dist",
+
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+
+    "experimentalDecorators": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+
+    "types": ["vitest/globals"],
+    "paths": {
+      "@server/*": ["./src/*"],
+      "@tests/*": ["./tests/*"]
+    }
+  }
+}
