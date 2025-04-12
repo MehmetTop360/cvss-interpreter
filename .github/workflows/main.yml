@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-22.04
     services:
       postgres:
-        image: postgres:23.11.0-alpine
+        image: postgres:15.3-alpine
         env:
           POSTGRES_USER: mehmet
           POSTGRES_PASSWORD: mehmet
