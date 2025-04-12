@@ -1,0 +1,94 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    services:
+      postgres:
+        image: postgres:23.11.0-alpine
+        env:
+          POSTGRES_USER: mehmet
+          POSTGRES_PASSWORD: mehmet
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.12.1"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check server
+        run: npm run typecheck -w=server
+
+      - name: Type check client
+        run: npm run type-check -w=client
+
+      - name: Lint server
+        run: npm run lint -w=server
+
+      - name: Lint client
+        run: npm run lint -w=client
+
+      - name: Test server
+        run: npm run test -w=server
+        env:
+          DB_USER: mehmet
+          DB_PASSWORD: mehmet
+          DB_NAME: testdb
+          CI: true
+          TOKEN_KEY: supersecretkey
+
+      - name: Test client (unit)
+        run: npm run test:unit -w=client
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build server for running it
+        run: npm run build -w=server
+
+      - name: Start server for E2E tests
+        run: npm run start -w=server &
+        env:
+          DB_USER: mehmet
+          DB_PASSWORD: mehmet
+          DB_NAME: testdb
+          CI: true
+          TOKEN_KEY: supersecretkey
+          PORT: 3000
+
+      - name: Build front end for E2E tests
+        run: npm run build -w=client
+        env:
+          VITE_API_ORIGIN: http://localhost:3000
+          VITE_API_PATH: /v1/trpc
+
+      - name: URL Health Check
+        uses: Jtalk/url-health-check-action@v3.2
+        with:
+          max-attempts: 5
+          retry-delay: 5s
+          url: http://localhost:3000/health
+
+      - name: Test client E2E
+        run: npm run test:e2e -w=client
+        env:
+          VITE_API_ORIGIN: http://localhost:3000
+          VITE_API_PATH: /v1/trpc
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: client/playwright-report/
+          retention-days: 7
