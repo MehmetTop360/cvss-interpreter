@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCvssStore } from '@/stores/cvssStore'
 import CvssCalculator from '@/components/CvssCalculator.vue'
@@ -7,7 +7,7 @@ import InterpretationDisplay from '@/components/InterpretationDisplay.vue'
 
 const cvssStore = useCvssStore()
 
-const { cvssString, selectedVersion } = storeToRefs(cvssStore)
+const { cvssString, selectedVersion, selectedMetrics } = storeToRefs(cvssStore)
 
 onMounted(() => {
   if (!cvssStore.definitions[cvssStore.selectedVersion]) {
@@ -22,6 +22,14 @@ const currentScore = computed(() => {
 const cvssVersionFullName = computed(() => {
   return selectedVersion.value === '4.0' ? 'CVSS 4.0' : 'CVSS 3.1'
 })
+
+watch(
+  selectedMetrics,
+  () => {
+    console.log('Selected metrics changed - updating CVSS string')
+  },
+  { deep: true }
+)
 </script>
 
 <template>

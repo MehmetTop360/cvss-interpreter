@@ -41,9 +41,9 @@ export const defaultMetricsV4_0: SelectedMetrics = {
   AT: 'N',
   PR: 'N',
   UI: 'N',
-  VC: 'H',
-  VI: 'H',
-  VA: 'H',
+  VC: 'N',
+  VI: 'N',
+  VA: 'N',
   SC: 'N',
   SI: 'N',
   SA: 'N',
@@ -71,25 +71,17 @@ export const defaultMetricsV4_0: SelectedMetrics = {
 }
 
 export const metricGroupsV4_0: Record<string, string[]> = {
-  'Base Metrics - Exploitability': ['AV', 'AC', 'AT', 'PR', 'UI'],
-  'Base Metrics - Vulnerable System Impact': ['VC', 'VI', 'VA'],
-  'Base Metrics - Subsequent System Impact': ['SC', 'SI', 'SA'],
-  'Threat Metrics': ['E'],
-  'Environmental Metrics - Security Requirements': ['CR', 'IR', 'AR'],
-  'Environmental Metrics - Modified Base': [
-    'MAV',
-    'MAC',
-    'MAT',
-    'MPR',
-    'MUI',
-    'MVC',
-    'MVI',
-    'MVA',
-    'MSC',
-    'MSI',
-    'MSA',
-  ],
+  'Base Metrics': [],
+  'Exploitability Metrics': ['AV', 'AC', 'AT', 'PR', 'UI'],
+  'Vulnerable System Impact Metrics': ['VC', 'VI', 'VA'],
+  'Subsequent System Impact Metrics': ['SC', 'SI', 'SA'],
   'Supplemental Metrics': ['S', 'AU', 'R', 'V', 'RE', 'U'],
+  'Environmental (Modified Base Metrics)': [],
+  'Modified Exploitability Metrics': ['MAV', 'MAC', 'MAT', 'MPR', 'MUI'],
+  'Modified Vulnerable System Impact Metrics': ['MVC', 'MVI', 'MVA'],
+  'Modified Subsequent System Impact Metrics': ['MSC', 'MSI', 'MSA'],
+  'Environmental (Security Requirements)': ['CR', 'IR', 'AR'],
+  'Threat Metrics': ['E'],
 }
 
 export const metricOrderV3_1 = [
@@ -143,9 +135,7 @@ export const defaultMetricsV3_1: SelectedMetrics = {
 }
 
 export const metricGroupsV3_1: Record<string, string[]> = {
-  'Base Metrics - Exploitability': ['AV', 'AC', 'PR', 'UI'],
-  'Base Metrics - Impact': ['S', 'C', 'I', 'A'],
-  'Temporal Metrics': ['E', 'RL', 'RC'],
-  'Environmental Metrics - Security Requirements': ['CR', 'IR', 'AR'],
-  'Environmental Metrics - Modified Base': ['MAV', 'MAC', 'MPR', 'MUI', 'MS', 'MC', 'MI', 'MA'],
+  'Base Score': ['AV', 'AC', 'PR', 'UI', 'S', 'C', 'I', 'A'],
+  'Temporal Score': ['E', 'RL', 'RC'],
+  'Environmental Score': ['CR', 'IR', 'AR', 'MAV', 'MAC', 'MPR', 'MUI', 'MS', 'MC', 'MI', 'MA'],
 }

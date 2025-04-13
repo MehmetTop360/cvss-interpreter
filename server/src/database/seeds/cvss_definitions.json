@@ -504,6 +504,204 @@
     "simplified_description": "No specific information about how availability impacts might be different in your particular environment has been provided. The assessment will use the original Availability value from the Base metric."
   },
   {
+    "version": "3.1",
+    "metric_key": "MAV",
+    "value_key": "N",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Network",
+    "official_description": "The modified attack vector is Network, indicating the vulnerable component is exploitable over the network from a remote attacker.",
+    "simplified_description": "In your specific environment, the vulnerability can be exploited remotely over the internet or network without requiring local access or physical proximity."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAV",
+    "value_key": "A",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Adjacent",
+    "official_description": "The modified attack vector is Adjacent, indicating the vulnerable component is exploitable only from a network adjacent to the target system.",
+    "simplified_description": "In your specific environment, the vulnerability can only be exploited from the same physical network (like WiFi or Bluetooth) or local subnet, not from across the internet."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAV",
+    "value_key": "L",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Local",
+    "official_description": "The modified attack vector is Local, indicating the vulnerable component is exploitable only by a locally authenticated user or requiring user interaction.",
+    "simplified_description": "In your specific environment, the vulnerability can only be exploited by an attacker who already has local access to the system or who can convince a user to perform certain actions."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAV",
+    "value_key": "P",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Physical",
+    "official_description": "The modified attack vector is Physical, indicating the vulnerable component requires physical access to exploit.",
+    "simplified_description": "In your specific environment, the vulnerability can only be exploited through direct physical contact with the vulnerable hardware or device."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAC",
+    "value_key": "L",
+    "metric_name": "Modified Attack Complexity",
+    "value_name": "Low",
+    "official_description": "The modified attack complexity is Low, indicating no specialized conditions are required for exploitation in this environment.",
+    "simplified_description": "In your specific environment, exploiting this vulnerability is straightforward with repeatable success and doesn't require special conditions or circumstances."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MAC",
+    "value_key": "H",
+    "metric_name": "Modified Attack Complexity",
+    "value_name": "High",
+    "official_description": "The modified attack complexity is High, indicating specialized conditions must be present for exploitation in this environment.",
+    "simplified_description": "In your specific environment, exploiting this vulnerability requires specific conditions that the attacker cannot control, making consistent exploitation difficult."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MPR",
+    "value_key": "N",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "None",
+    "official_description": "The modified privileges required is None, indicating no privileges are needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, an attacker needs no prior privileges or access to exploit the vulnerability - it can be exploited by a complete outsider."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MPR",
+    "value_key": "L",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "Low",
+    "official_description": "The modified privileges required is Low, indicating only basic user privileges are needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, an attacker needs basic user-level access before exploiting the vulnerability - standard user privileges are sufficient."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MPR",
+    "value_key": "H",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "High",
+    "official_description": "The modified privileges required is High, indicating administrative privileges are needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, an attacker needs administrative-level access before exploiting the vulnerability - regular user permissions are not sufficient."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MUI",
+    "value_key": "N",
+    "metric_name": "Modified User Interaction",
+    "value_name": "None",
+    "official_description": "The modified user interaction is None, indicating no user interaction is required for exploitation in this environment.",
+    "simplified_description": "In your specific environment, the attack can proceed without any human user taking action - the attacker can exploit the vulnerability completely independently."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MUI",
+    "value_key": "R",
+    "metric_name": "Modified User Interaction",
+    "value_name": "Required",
+    "official_description": "The modified user interaction is Required, indicating user interaction is needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, the attack requires a user (other than the attacker) to perform some action before the vulnerability can be exploited, such as opening a file or clicking a link."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MS",
+    "value_key": "U",
+    "metric_name": "Modified Scope",
+    "value_name": "Unchanged",
+    "official_description": "The modified scope is Unchanged, indicating the vulnerability in this environment can only affect resources managed by the same security authority.",
+    "simplified_description": "In your specific environment, the attack's impact stays contained within the same security boundary as the vulnerable component, without affecting other systems."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MS",
+    "value_key": "C",
+    "metric_name": "Modified Scope",
+    "value_name": "Changed",
+    "official_description": "The modified scope is Changed, indicating the vulnerability in this environment can affect resources beyond the security scope of the vulnerable component.",
+    "simplified_description": "In your specific environment, the attack's impact extends beyond the original security boundary, affecting other systems or applications that would typically be isolated."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MC",
+    "value_key": "H",
+    "metric_name": "Modified Confidentiality",
+    "value_name": "High",
+    "official_description": "The modified confidentiality impact is High, indicating a total loss of confidentiality in this environment.",
+    "simplified_description": "In your specific environment, the attack causes a severe loss of confidentiality, with all sensitive information potentially being disclosed to the attacker or access to highly sensitive information."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MC",
+    "value_key": "L",
+    "metric_name": "Modified Confidentiality",
+    "value_name": "Low",
+    "official_description": "The modified confidentiality impact is Low, indicating a limited loss of confidentiality in this environment.",
+    "simplified_description": "In your specific environment, the attack causes a minor loss of confidentiality, with some restricted information being disclosed but with limited impact."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MC",
+    "value_key": "N",
+    "metric_name": "Modified Confidentiality",
+    "value_name": "None",
+    "official_description": "The modified confidentiality impact is None, indicating no loss of confidentiality in this environment.",
+    "simplified_description": "In your specific environment, the attack does not expose any confidential information - no data confidentiality is affected."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MI",
+    "value_key": "H",
+    "metric_name": "Modified Integrity",
+    "value_name": "High",
+    "official_description": "The modified integrity impact is High, indicating a total loss of integrity in this environment.",
+    "simplified_description": "In your specific environment, the attack causes a severe loss of integrity, allowing the attacker to modify any/all files or make changes with serious consequences."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MI",
+    "value_key": "L",
+    "metric_name": "Modified Integrity",
+    "value_name": "Low",
+    "official_description": "The modified integrity impact is Low, indicating a limited loss of integrity in this environment.",
+    "simplified_description": "In your specific environment, the attack causes a minor loss of integrity, with limited ability to modify data and without serious direct impact."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MI",
+    "value_key": "N",
+    "metric_name": "Modified Integrity",
+    "value_name": "None",
+    "official_description": "The modified integrity impact is None, indicating no loss of integrity in this environment.",
+    "simplified_description": "In your specific environment, the attack does not allow any unauthorized modification of data - no integrity is affected."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MA",
+    "value_key": "H",
+    "metric_name": "Modified Availability",
+    "value_name": "High",
+    "official_description": "The modified availability impact is High, indicating a total loss of availability in this environment.",
+    "simplified_description": "In your specific environment, the attack causes a severe loss of availability, making the system or its resources completely inaccessible or unusable."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MA",
+    "value_key": "L",
+    "metric_name": "Modified Availability",
+    "value_name": "Low",
+    "official_description": "The modified availability impact is Low, indicating a limited loss of availability in this environment.",
+    "simplified_description": "In your specific environment, the attack causes a minor loss of availability, with reduced performance or interruptions but without completely denying access."
+  },
+  {
+    "version": "3.1",
+    "metric_key": "MA",
+    "value_key": "N",
+    "metric_name": "Modified Availability",
+    "value_name": "None",
+    "official_description": "The modified availability impact is None, indicating no loss of availability in this environment.",
+    "simplified_description": "In your specific environment, the attack does not affect system availability - there is no disruption to services or access."
+  },
+  {
     "version": "4.0",
     "metric_key": "AV",
     "value_key": "N",
@@ -1249,5 +1447,293 @@
     "value_name": "High",
     "official_description": "The actions required to respond to a vulnerability are significant and/or difficult, and may possibly lead to an extended, scheduled service impact. This would need to be considered for scheduling purposes including honoring any embargo on deployment of the selected response.  Alternatively, response to the vulnerability in the field is not possible remotely. The only resolution to the vulnerability involves physical replacement (e.g. units deployed would have to be recalled for a depot level repair or replacement). Examples include: a highly privileged driver update, microcode or UEFI BIOS updates, or software upgrades requiring careful analysis and understanding of any potential infrastructure impact before implementation. A UEFI BIOS update that impacts Trusted Platform Module (TPM) attestation without impacting disk encryption software such as Bit locker is a good recent example. Irreparable failures such as non-bootable flash subsystems, failed disks or solid-state drives (SSD), bad memory modules, network devices, or other non-recoverable under warranty hardware, should also be scored as having a High effort.",
     "simplified_description": "Fixing or mitigating this vulnerability requires significant effort. Organizations need to perform complex actions like updating low-level system components (BIOS, firmware), making changes that require extensive testing, or even physically replacing hardware. These responses typically require specialized expertise, careful planning, scheduled downtime, and may involve substantial business disruption. Examples include firmware updates that affect security features, or cases where physical device replacement is the only solution."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAV",
+    "value_key": "N",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Network",
+    "official_description": "The modified attack vector is Network, indicating the vulnerable system in this environment is exploitable over the network from a remote attacker.",
+    "simplified_description": "In your specific environment, the vulnerability can be exploited remotely over the internet or network without requiring local access or physical proximity."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAV",
+    "value_key": "A",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Adjacent",
+    "official_description": "The modified attack vector is Adjacent, indicating the vulnerable system in this environment is exploitable only from a network adjacent to the target system.",
+    "simplified_description": "In your specific environment, the vulnerability can only be exploited from the same physical network (like WiFi, NFC, or Bluetooth) or local subnet, not from across the internet."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAV",
+    "value_key": "L",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Local",
+    "official_description": "The modified attack vector is Local, indicating the vulnerable system in this environment is exploitable only by a locally authenticated user or requiring user interaction.",
+    "simplified_description": "In your specific environment, the vulnerability can only be exploited by an attacker who already has local access to the system or who can convince a user to perform certain actions."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAV",
+    "value_key": "P",
+    "metric_name": "Modified Attack Vector",
+    "value_name": "Physical",
+    "official_description": "The modified attack vector is Physical, indicating the vulnerable system in this environment requires physical access to exploit.",
+    "simplified_description": "In your specific environment, the vulnerability can only be exploited through direct physical contact with the vulnerable hardware or device."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAC",
+    "value_key": "L",
+    "metric_name": "Modified Attack Complexity",
+    "value_name": "Low",
+    "official_description": "The modified attack complexity is Low, indicating no specialized circumvention is needed to exploit the vulnerability in this environment.",
+    "simplified_description": "In your specific environment, exploiting this vulnerability is straightforward with no special preparation needed - the attack works consistently against the vulnerable system."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAC",
+    "value_key": "H",
+    "metric_name": "Modified Attack Complexity",
+    "value_name": "High",
+    "official_description": "The modified attack complexity is High, indicating security-enhancing techniques must be circumvented to exploit the vulnerability in this environment.",
+    "simplified_description": "In your specific environment, exploiting this vulnerability requires bypassing security protections or discovering target-specific secrets, making the attack more complicated to execute."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAT",
+    "value_key": "N",
+    "metric_name": "Modified Attack Requirements",
+    "value_name": "None",
+    "official_description": "The modified attack requirements are None, indicating the attack does not depend on deployment or execution conditions in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't depend on any special conditions to succeed - the vulnerability can be exploited in virtually any circumstance."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MAT",
+    "value_key": "P",
+    "metric_name": "Modified Attack Requirements",
+    "value_name": "Present",
+    "official_description": "The modified attack requirements are Present, indicating the attack depends on specific deployment or execution conditions in this environment.",
+    "simplified_description": "In your specific environment, the attack requires specific conditions like winning a race condition or achieving a network injection position between the target and another system."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MPR",
+    "value_key": "N",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "None",
+    "official_description": "The modified privileges required are None, indicating no privileges are needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, an attacker needs no prior privileges or access to exploit the vulnerability - it can be exploited by a complete outsider."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MPR",
+    "value_key": "L",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "Low",
+    "official_description": "The modified privileges required are Low, indicating only basic user privileges are needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, an attacker needs basic user-level access before exploiting the vulnerability - standard user privileges are sufficient."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MPR",
+    "value_key": "H",
+    "metric_name": "Modified Privileges Required",
+    "value_name": "High",
+    "official_description": "The modified privileges required are High, indicating administrative privileges are needed for exploitation in this environment.",
+    "simplified_description": "In your specific environment, an attacker needs administrative-level access before exploiting the vulnerability - regular user permissions are not sufficient."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MUI",
+    "value_key": "N",
+    "metric_name": "Modified User Interaction",
+    "value_name": "None",
+    "official_description": "The modified user interaction is None, indicating no user interaction is required for exploitation in this environment.",
+    "simplified_description": "In your specific environment, the attack can proceed without any human user taking action - the attacker can exploit the vulnerability completely independently."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MUI",
+    "value_key": "P",
+    "metric_name": "Modified User Interaction",
+    "value_name": "Passive",
+    "official_description": "The modified user interaction is Passive, indicating limited interaction is required from a targeted user in this environment.",
+    "simplified_description": "In your specific environment, the attack requires some user interaction, but in ways users wouldn't recognize as risky - normal actions like visiting a legitimate but compromised website are sufficient."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MUI",
+    "value_key": "A",
+    "metric_name": "Modified User Interaction",
+    "value_name": "Active",
+    "official_description": "The modified user interaction is Active, indicating specific, conscious interactions are required from a targeted user in this environment.",
+    "simplified_description": "In your specific environment, the attack requires users to perform specific, deliberate actions that are outside normal behavior, like importing files in particular ways or dismissing security warnings."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVC",
+    "value_key": "H",
+    "metric_name": "Modified Vulnerable System Confidentiality",
+    "value_name": "High",
+    "official_description": "The modified vulnerable system confidentiality impact is High, indicating a total loss of confidentiality within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack exposes highly sensitive information in the vulnerable system itself, either all data or specific critical information with serious consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVC",
+    "value_key": "L",
+    "metric_name": "Modified Vulnerable System Confidentiality",
+    "value_name": "Low",
+    "official_description": "The modified vulnerable system confidentiality impact is Low, indicating a limited loss of confidentiality within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack exposes some sensitive information in the vulnerable system itself, but in a limited way that doesn't pose a serious direct risk."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVC",
+    "value_key": "N",
+    "metric_name": "Modified Vulnerable System Confidentiality",
+    "value_name": "None",
+    "official_description": "The modified vulnerable system confidentiality impact is None, indicating no loss of confidentiality within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't expose any sensitive information within the vulnerable system itself."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVI",
+    "value_key": "H",
+    "metric_name": "Modified Vulnerable System Integrity",
+    "value_name": "High",
+    "official_description": "The modified vulnerable system integrity impact is High, indicating a total loss of integrity within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack allows severe tampering with data in the vulnerable system itself, either modifying any/all protected files or making changes with serious consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVI",
+    "value_key": "L",
+    "metric_name": "Modified Vulnerable System Integrity",
+    "value_name": "Low",
+    "official_description": "The modified vulnerable system integrity impact is Low, indicating a limited loss of integrity within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack allows some tampering with data in the vulnerable system itself, but in a limited way that doesn't pose a serious direct risk."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVI",
+    "value_key": "N",
+    "metric_name": "Modified Vulnerable System Integrity",
+    "value_name": "None",
+    "official_description": "The modified vulnerable system integrity impact is None, indicating no loss of integrity within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't allow any tampering with data in the vulnerable system itself."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVA",
+    "value_key": "H",
+    "metric_name": "Modified Vulnerable System Availability",
+    "value_name": "High",
+    "official_description": "The modified vulnerable system availability impact is High, indicating a total loss of availability within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack severely disrupts the functioning of the vulnerable system itself, either causing a complete outage or disabling significant functionality with serious consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVA",
+    "value_key": "L",
+    "metric_name": "Modified Vulnerable System Availability",
+    "value_name": "Low",
+    "official_description": "The modified vulnerable system availability impact is Low, indicating a limited loss of availability within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack causes minor disruption to the functioning of the vulnerable system itself, with reduced performance or interruptions but without completely disabling it."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MVA",
+    "value_key": "N",
+    "metric_name": "Modified Vulnerable System Availability",
+    "value_name": "None",
+    "official_description": "The modified vulnerable system availability impact is None, indicating no loss of availability within the vulnerable system in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't disrupt the functioning of the vulnerable system itself."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSC",
+    "value_key": "H",
+    "metric_name": "Modified Subsequent System Confidentiality",
+    "value_name": "High",
+    "official_description": "The modified subsequent system confidentiality impact is High, indicating a total loss of confidentiality in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack exposes highly sensitive information in other connected systems beyond the initially vulnerable one, potentially causing serious consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSC",
+    "value_key": "L",
+    "metric_name": "Modified Subsequent System Confidentiality",
+    "value_name": "Low",
+    "official_description": "The modified subsequent system confidentiality impact is Low, indicating a limited loss of confidentiality in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack exposes some sensitive information in other connected systems beyond the initially vulnerable one, but in a limited way that doesn't pose a serious risk."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSC",
+    "value_key": "N",
+    "metric_name": "Modified Subsequent System Confidentiality",
+    "value_name": "None",
+    "official_description": "The modified subsequent system confidentiality impact is None, indicating no loss of confidentiality in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't expose any sensitive information in other connected systems - any confidentiality impact is limited to the initially vulnerable system itself."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSI",
+    "value_key": "H",
+    "metric_name": "Modified Subsequent System Integrity",
+    "value_name": "High",
+    "official_description": "The modified subsequent system integrity impact is High, indicating a total loss of integrity in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack allows severe tampering with data in other connected systems beyond the initially vulnerable one, potentially with serious consequences."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSI",
+    "value_key": "L",
+    "metric_name": "Modified Subsequent System Integrity",
+    "value_name": "Low",
+    "official_description": "The modified subsequent system integrity impact is Low, indicating a limited loss of integrity in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack allows some tampering with data in other connected systems beyond the initially vulnerable one, but in a limited way that doesn't pose a serious risk."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSI",
+    "value_key": "N",
+    "metric_name": "Modified Subsequent System Integrity",
+    "value_name": "None",
+    "official_description": "The modified subsequent system integrity impact is None, indicating no loss of integrity in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't allow any tampering with data in other connected systems - any integrity impact is limited to the initially vulnerable system itself."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSA",
+    "value_key": "H",
+    "metric_name": "Modified Subsequent System Availability",
+    "value_name": "High",
+    "official_description": "The modified subsequent system availability impact is High, indicating a total loss of availability in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack severely disrupts the functioning of other connected systems beyond the initially vulnerable one, potentially causing a complete outage or major disruption."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSA",
+    "value_key": "L",
+    "metric_name": "Modified Subsequent System Availability",
+    "value_name": "Low",
+    "official_description": "The modified subsequent system availability impact is Low, indicating a limited loss of availability in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack causes minor disruption to other connected systems beyond the initially vulnerable one, with reduced performance or interruptions but without completely disabling them."
+  },
+  {
+    "version": "4.0",
+    "metric_key": "MSA",
+    "value_key": "N",
+    "metric_name": "Modified Subsequent System Availability",
+    "value_name": "None",
+    "official_description": "The modified subsequent system availability impact is None, indicating no loss of availability in connected systems in this environment.",
+    "simplified_description": "In your specific environment, the attack doesn't disrupt the functioning of other connected systems - any availability impact is limited to the initially vulnerable system itself."
   }
 ]
