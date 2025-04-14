@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { trpc } from '@/trpc'
 import type { CvssTemplateBare } from '@mono/server/src/shared/entities'
-import type { CvssState as CvssStateType } from '@/types/cvss'
+import type { CvssState as CvssStateType, CvssVersion } from '@/types/cvss'
 import {
   metricOrderV3_1,
   metricOrderV4_0,
@@ -59,6 +59,38 @@ const valueOrderMaps: Record<string, string[]> = {
   U: ['X', 'Clear', 'Green', 'Amber', 'Red'],
 }
 
+const parentChildMapV4_0: Record<string, string[]> = {
+  'Base Metrics': [
+    'Exploitability Metrics',
+    'Vulnerable System Impact Metrics',
+    'Subsequent System Impact Metrics',
+  ],
+  'Environmental (Modified Base Metrics)': [
+    'Modified Exploitability Metrics',
+    'Modified Vulnerable System Impact Metrics',
+    'Modified Subsequent System Impact Metrics',
+  ],
+  'Supplemental Metrics': [],
+  'Environmental (Security Requirements)': [],
+  'Threat Metrics': [],
+}
+
+const orderedParentGroupsV4_0 = [
+  'Base Metrics',
+  'Supplemental Metrics',
+  'Environmental (Modified Base Metrics)',
+  'Environmental (Security Requirements)',
+  'Threat Metrics',
+]
+
+const orderedParentGroupsV3_1 = ['Base Score', 'Temporal Score', 'Environmental Score']
+
+export interface StructuredMetricGroup {
+  name: string
+  metrics?: string[]
+  children?: StructuredMetricGroup[]
+}
+
 interface CvssState extends Omit<CvssStateType, 'activeInterpretationMetricKey'> {}
 
 export const useCvssStore = defineStore('cvss', {
@@ -88,35 +120,35 @@ export const useCvssStore = defineStore('cvss', {
       const prefix = `CVSS:${state.selectedVersion}`
       const order = state.metricOrder[state.selectedVersion]
       const defaults = state.selectedVersion === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
-
-      let baseMetrics: string[] = []
       const groups = state.metricGroups[state.selectedVersion]
 
-      if (state.selectedVersion === '4.0' && groups) {
-        baseMetrics = [
+      if (!order || order.length === 0 || !groups) {
+        const fallbackOrder = Object.keys(state.selectedMetrics)
+        if (fallbackOrder.length === 0) return prefix
+        const fallbackParts = fallbackOrder.map(
+          (key) => `${key}:${state.selectedMetrics[key] ?? 'X'}`
+        )
+        return `${prefix}/${fallbackParts.join('/')}`
+      }
+
+      let baseMetricKeys: string[] = []
+      if (state.selectedVersion === '4.0') {
+        baseMetricKeys = [
           ...(groups['Exploitability Metrics'] || []),
           ...(groups['Vulnerable System Impact Metrics'] || []),
           ...(groups['Subsequent System Impact Metrics'] || []),
         ]
-      } else if (state.selectedVersion === '3.1' && groups) {
-        baseMetrics = groups['Base Score'] || []
+      } else {
+        baseMetricKeys = groups['Base Score'] || []
       }
-
-      if (!order || order.length === 0) {
-        const fallbackOrder = Object.keys(state.selectedMetrics)
-        if (fallbackOrder.length === 0) return prefix
-        const fallbackParts = fallbackOrder.map((key) => `${key}:${state.selectedMetrics[key]}`)
-        return `${prefix}/${fallbackParts.join('/')}`
-      }
-
       const parts = order
         .map((key) => {
           const currentValue = state.selectedMetrics[key]
           const defaultValue = defaults[key] ?? 'X'
 
-          const isBase = baseMetrics.includes(key)
           const includeMetric =
-            isBase || (currentValue !== undefined && currentValue !== defaultValue)
+            baseMetricKeys.includes(key) ||
+            (currentValue !== undefined && currentValue !== defaultValue)
 
           if (includeMetric) {
             return `${key}:${currentValue ?? 'X'}`
@@ -124,7 +156,7 @@ export const useCvssStore = defineStore('cvss', {
             return null
           }
         })
-        .filter((part) => part !== null)
+        .filter((part): part is string => part !== null)
 
       return parts.length > 0 ? `${prefix}/${parts.join('/')}` : prefix
     },
@@ -147,6 +179,9 @@ export const useCvssStore = defineStore('cvss', {
         if (metricKey === 'E') sortKey = state.selectedVersion === '3.1' ? 'E_v3' : 'E_v4'
         if (metricKey === 'MUI') sortKey = state.selectedVersion === '3.1' ? 'MUI_v3' : 'MUI_v4'
         if (metricKey === 'S' && state.selectedVersion === '4.0') sortKey = 'S_sup'
+        if (metricKey === 'MSI' && state.selectedVersion === '4.0') sortKey = 'MSI'
+        if (metricKey === 'MSA' && state.selectedVersion === '4.0') sortKey = 'MSA'
+
         const orderMap = valueOrderMaps[sortKey]
         if (orderMap) {
           groupValues.sort((a, b) => {
@@ -162,14 +197,64 @@ export const useCvssStore = defineStore('cvss', {
       })
       return groups
     },
+    structuredMetricGroups(state): StructuredMetricGroup[] {
+      const version = state.selectedVersion
+      const allGroups = state.metricGroups[version]
+      if (!allGroups) return []
+
+      const structuredResult: StructuredMetricGroup[] = []
+
+      if (version === '4.0') {
+        const availableGroupKeys = Object.keys(allGroups)
+        orderedParentGroupsV4_0.forEach((parentName) => {
+          const parentGroup: StructuredMetricGroup = { name: parentName }
+          const childNames = parentChildMapV4_0[parentName]
+
+          if (childNames && childNames.length > 0) {
+            parentGroup.children = []
+            childNames.forEach((childName) => {
+              if (availableGroupKeys.includes(childName) && allGroups[childName]?.length > 0) {
+                parentGroup.children?.push({
+                  name: childName,
+                  metrics: allGroups[childName],
+                })
+              }
+            })
+
+            if (parentGroup.children.length > 0) {
+              structuredResult.push(parentGroup)
+            }
+          } else {
+            if (availableGroupKeys.includes(parentName) && allGroups[parentName]?.length > 0) {
+              parentGroup.metrics = allGroups[parentName]
+              structuredResult.push(parentGroup)
+            }
+          }
+        })
+      } else {
+        orderedParentGroupsV3_1.forEach((groupName) => {
+          if (allGroups[groupName] && allGroups[groupName].length > 0) {
+            structuredResult.push({
+              name: groupName,
+              metrics: allGroups[groupName],
+            })
+          }
+        })
+      }
+
+      return structuredResult
+    },
   },
 
   actions: {
-    setVersion(version: '3.1' | '4.0') {
+    setVersion(version: CvssVersion) {
       if (this.selectedVersion !== version) {
+        console.log(`Switching version to ${version}`)
         this.selectedVersion = version
+
         this.selectedMetrics =
           version === '4.0' ? { ...defaultMetricsV4_0 } : { ...defaultMetricsV3_1 }
+
         if (!this.definitions[version]) {
           this.fetchDefinitions()
         } else {
@@ -177,69 +262,96 @@ export const useCvssStore = defineStore('cvss', {
         }
       }
     },
+
     setDescriptionType(type: 'simplified' | 'official') {
       this.selectedDescriptionType = type
     },
+
     setMetricValue(metricKey: string, valueKey: string) {
       const currentOrder = this.metricOrder[this.selectedVersion]
       if (currentOrder?.includes(metricKey)) {
         if (this.selectedMetrics[metricKey] !== valueKey) {
           this.selectedMetrics[metricKey] = valueKey
-          console.log(`Set ${metricKey} to ${valueKey}. New string: ${this.cvssString}`)
         }
       } else {
         console.warn(
-          `Attempted to set metric ${metricKey} which is not in the order for version ${this.selectedVersion}`
+          `Attempted to set metric ${metricKey} which is not valid for version ${this.selectedVersion}`
         )
       }
     },
+
     setSelectedMetrics(metrics: Record<string, string>) {
-      console.log('Setting multiple metrics:', metrics)
       const currentOrder = this.metricOrder[this.selectedVersion]
       if (!currentOrder) return
+
       const newSelectedMetrics = { ...this.selectedMetrics }
+      const defaults = this.selectedVersion === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
       let changed = false
+
       currentOrder.forEach((key) => {
-        if (
-          Object.prototype.hasOwnProperty.call(metrics, key) &&
-          newSelectedMetrics[key] !== metrics[key]
-        ) {
-          newSelectedMetrics[key] = metrics[key]
-          changed = true
+        if (Object.prototype.hasOwnProperty.call(metrics, key)) {
+          if (newSelectedMetrics[key] !== metrics[key]) {
+            newSelectedMetrics[key] = metrics[key]
+            changed = true
+          }
+        } else {
+          const defaultValue = defaults[key] ?? 'X'
+          if (newSelectedMetrics[key] !== defaultValue) {
+            newSelectedMetrics[key] = defaultValue
+            changed = true
+          }
         }
+      })
+
+      Object.keys(defaults).forEach((key) => {
         if (!Object.prototype.hasOwnProperty.call(newSelectedMetrics, key)) {
-          const defaults = this.selectedVersion === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
           newSelectedMetrics[key] = defaults[key] ?? 'X'
           changed = true
         }
       })
+
       if (changed) {
         this.selectedMetrics = newSelectedMetrics
-        console.log('Metrics updated from bulk set. New string:', this.cvssString)
       }
     },
+
     _initializeMetricsForCurrentVersion() {
       const currentDefaults =
         this.selectedVersion === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
       const currentOrder = this.metricOrder[this.selectedVersion] || []
       const newSelectedMetrics: Record<string, string> = {}
+      let changed = false
+
       currentOrder.forEach((key) => {
-        newSelectedMetrics[key] = this.selectedMetrics[key] ?? currentDefaults[key] ?? 'X'
+        const existingValue = this.selectedMetrics[key]
+        const defaultValue = currentDefaults[key] ?? 'X'
+
+        newSelectedMetrics[key] = existingValue !== undefined ? existingValue : defaultValue
       })
+
+      const currentKeys = Object.keys(this.selectedMetrics).sort()
+      const newKeys = Object.keys(newSelectedMetrics).sort()
+
       if (
-        JSON.stringify(Object.keys(this.selectedMetrics).sort()) !==
-        JSON.stringify(Object.keys(newSelectedMetrics).sort())
+        JSON.stringify(currentKeys) !== JSON.stringify(newKeys) ||
+        JSON.stringify(this.selectedMetrics) !== JSON.stringify(newSelectedMetrics)
       ) {
+        changed = true
+      }
+
+      if (changed) {
         this.selectedMetrics = newSelectedMetrics
       }
     },
+
     async fetchDefinitions() {
       const versionToFetch = this.selectedVersion
+
       if (this.definitions[versionToFetch] || this.isLoadingDefinitions) {
-        if (this.definitions[versionToFetch])
-          console.log(`Definitions for v${versionToFetch} already loaded.`)
+        if (this.definitions[versionToFetch]) this._initializeMetricsForCurrentVersion()
         return
       }
+
       this.isLoadingDefinitions = true
       this.errorLoadingDefinitions = null
       console.log(`Fetching CVSS v${versionToFetch} definitions...`)
@@ -247,15 +359,6 @@ export const useCvssStore = defineStore('cvss', {
         const result = await trpc.CvssTemplate.getDefinitionsByVersion.query({
           version: versionToFetch as any,
         })
-        console.log(
-          `Fetched Raw Definitions (v${versionToFetch}):`,
-          JSON.stringify(result, null, 2)
-        )
-        const mavDefs = result.filter((d) => d.metric_key === 'MAV')
-        console.log(
-          `Fetched MAV Definitions (v${versionToFetch}):`,
-          JSON.stringify(mavDefs, null, 2)
-        )
         this.definitions[versionToFetch] = result
         console.log(`Successfully fetched ${result.length} definitions for v${versionToFetch}.`)
         this._initializeMetricsForCurrentVersion()
