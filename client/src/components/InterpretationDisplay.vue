@@ -120,10 +120,10 @@ const orderedGroupNames = computed(() => {
           'Exploitability Metrics',
           'Vulnerable System Impact Metrics',
           'Subsequent System Impact Metrics',
+          'Supplemental Metrics',
           'Modified Exploitability Metrics',
           'Modified Vulnerable System Impact Metrics',
           'Modified Subsequent System Impact Metrics',
-          'Supplemental Metrics',
           'Environmental (Security Requirements)',
           'Threat Metrics',
         ]
