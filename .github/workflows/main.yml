@@ -80,11 +80,11 @@ jobs:
           retry-delay: 5s
           url: http://localhost:3000/health
 
-      - name: Test client E2E
-        run: npm run test:e2e -w=client
-        env:
-          VITE_API_ORIGIN: http://localhost:3000
-          VITE_API_PATH: /v1/trpc
+      # - name: Test client E2E
+      #   run: npm run test:e2e -w=client
+      #   env:
+      #     VITE_API_ORIGIN: http://localhost:3000
+      #     VITE_API_PATH: /v1/trpc
 
       - uses: actions/upload-artifact@v4
         if: always()

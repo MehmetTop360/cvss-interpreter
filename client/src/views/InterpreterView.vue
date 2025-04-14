@@ -4,6 +4,8 @@ import { storeToRefs } from 'pinia'
 import { useCvssStore } from '@/stores/cvssStore'
 import CvssCalculator from '@/components/CvssCalculator.vue'
 import InterpretationDisplay from '@/components/InterpretationDisplay.vue'
+import ReportGenerator from '@/components/ReportGenerator.vue'
+import { defaultMetricsV3_1, defaultMetricsV4_0 } from '@/constants/cvssConstants'
 
 const cvssStore = useCvssStore()
 
@@ -36,11 +38,13 @@ function copyToClipboard() {
 }
 
 function resetMetrics() {
-  if (selectedVersion.value === '4.0') {
-    setSelectedMetrics({})
-  } else {
-    setSelectedMetrics({})
-  }
+  console.log('Resetting metrics for version: ', selectedVersion.value)
+  const defaults = selectedVersion.value === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
+
+  const resetValues = { ...defaults }
+  console.log('Reset values: ', resetValues)
+
+  setSelectedMetrics(resetValues)
 }
 
 watch(
@@ -63,7 +67,7 @@ watch(
           <button
             @click="resetMetrics"
             class="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200"
-            title="Reset all metrics to default values"
+            data-tooltip="Reset all metrics to default values"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +88,7 @@ watch(
           <button
             @click="copyToClipboard"
             class="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200"
-            title="Copy CVSS vector string to clipboard"
+            data-tooltip="Copy CVSS vector string to clipboard"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -102,6 +106,7 @@ watch(
             </svg>
             {{ copiedToClipboard ? 'Copied!' : 'Copy' }}
           </button>
+          <ReportGenerator :current-score="currentScore" />
         </div>
       </div>
 
@@ -158,12 +163,12 @@ watch(
   border-color: #e5e7eb;
 }
 
-button[title] {
+[data-tooltip] {
   position: relative;
 }
 
-button[title]:hover::after {
-  content: attr(title);
+[data-tooltip]::after {
+  content: attr(data-tooltip);
   position: absolute;
   bottom: calc(100% + 5px);
   left: 50%;
@@ -176,9 +181,15 @@ button[title]:hover::after {
   white-space: nowrap;
   z-index: 10;
   pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s,
+    visibility 0.5s;
+  transition-delay: 0.8s;
 }
 
-button[title]:hover::before {
+[data-tooltip]::before {
   content: '';
   position: absolute;
   bottom: 100%;
@@ -188,5 +199,22 @@ button[title]:hover::before {
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
   z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s,
+    visibility 0.5s;
+  transition-delay: 0.8s;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-tooltip]:not(:hover)::after,
+[data-tooltip]:not(:hover)::before {
+  transition-delay: 0s;
 }
 </style>

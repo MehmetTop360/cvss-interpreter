@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import VersionSelector from '@/components/VersionSelector.vue'
 import DescriptionTypeSelector from '@/components/DescriptionTypeSelector.vue'
-import { FwbButton } from 'flowbite-vue'
 
 const route = useRoute()
 
@@ -37,11 +36,6 @@ const showCalculatorControls = computed(() => route.name === 'Calculator')
           <VersionSelector />
           <DescriptionTypeSelector />
         </div>
-      </div>
-      <div class="flex items-center">
-        <FwbButton v-if="showCalculatorControls" color="blue" size="sm">
-          Generate Report
-        </FwbButton>
       </div>
     </div>
   </header>

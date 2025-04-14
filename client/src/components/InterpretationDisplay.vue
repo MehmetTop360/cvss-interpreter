@@ -211,11 +211,6 @@ function getValueColor(value: string) {
         <button
           @click="toggleAllMetrics"
           class="flex items-center text-xs font-medium text-blue-600 hover:text-blue-800"
-          :title="
-            allExpanded
-              ? 'Collapse all interpretation sections'
-              : 'Expand all interpretation sections'
-          "
         >
           <span class="mr-1">{{ allExpanded ? 'Collapse All' : 'Expand All' }}</span>
           <svg
@@ -248,7 +243,6 @@ function getValueColor(value: string) {
           <div
             @click="toggleGroup(groupName)"
             class="mb-2 flex cursor-pointer items-center justify-between rounded-md border border-gray-200 bg-gray-50 px-3 py-2 hover:bg-gray-100"
-            :title="`Toggle all metrics in ${groupName}`"
           >
             <h4 class="text-sm font-semibold text-gray-700">{{ groupName }}</h4>
             <svg
@@ -277,7 +271,6 @@ function getValueColor(value: string) {
               <div
                 @click="toggleMetric(metricKey)"
                 class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50"
-                :title="`${getMetricName(metricKey)}: ${getSelectedDefinition(metricKey)?.value_name || ''}`"
               >
                 <div class="flex items-baseline">
                   <h5 class="text-sm font-medium text-gray-800">
@@ -340,25 +333,5 @@ function getValueColor(value: string) {
 
 .metric-interpretation:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-[title] {
-  position: relative;
-}
-
-[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 5px 10px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  border-radius: 3px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 10;
-  pointer-events: none;
 }
 </style>

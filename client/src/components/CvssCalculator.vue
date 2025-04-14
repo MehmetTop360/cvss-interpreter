@@ -114,7 +114,10 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
     <div v-else>
       <template v-if="selectedVersion === '4.0'">
         <div v-for="groupName in orderedGroupNames" :key="groupName" class="mb-5 last:mb-0">
-          <h3 class="text-md mb-3 border-b border-gray-300 pb-2 font-bold text-gray-700">
+          <h3
+            class="text-md group-header mb-3 border-b border-gray-300 pb-2 font-bold text-gray-700"
+            :data-tooltip="groupTooltips[groupName]"
+          >
             {{ groupName }}
             <span v-if="groupTooltips[groupName]" class="cursor-help text-sm text-gray-500">
               (?)
@@ -165,7 +168,10 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
 
       <template v-else>
         <div v-for="groupName in orderedGroupNames" :key="groupName" class="mb-5 last:mb-0">
-          <h3 class="text-md mb-3 border-b border-gray-300 pb-2 font-bold text-gray-700">
+          <h3
+            class="text-md group-header mb-3 border-b border-gray-300 pb-2 font-bold text-gray-700"
+            :data-tooltip="groupTooltips[groupName]"
+          >
             {{ groupName }}
             <span v-if="groupTooltips[groupName]" class="cursor-help text-sm text-gray-500">
               (?)
@@ -195,5 +201,62 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
 .calculator-container {
   max-height: none;
   overflow: visible;
+}
+
+.group-header {
+  position: relative;
+}
+
+.group-header[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: normal;
+  max-width: 300px;
+  width: max-content;
+  text-align: center;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s,
+    visibility 0.5s;
+  transition-delay: 0.8s;
+}
+
+.group-header[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.8);
+  z-index: 20;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s,
+    visibility 0.5s;
+  transition-delay: 0.8s;
+}
+
+.group-header[data-tooltip]:hover::after,
+.group-header[data-tooltip]:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.group-header[data-tooltip]:not(:hover)::after,
+.group-header[data-tooltip]:not(:hover)::before {
+  transition-delay: 0s;
 }
 </style>

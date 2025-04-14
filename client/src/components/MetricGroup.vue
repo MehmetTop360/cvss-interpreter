@@ -51,7 +51,7 @@ const defaultClasses =
           size="xs"
           pill
           :class="[
-            'tooltip-trigger focus:ring-1',
+            'metric-button focus:ring-1',
             selectedValue === value.value_key ? selectedClasses : defaultClasses,
           ]"
           :data-tooltip="tooltipContent(value)"
@@ -72,11 +72,11 @@ const defaultClasses =
   padding: 0.25rem 0.5rem;
 }
 
-.tooltip-trigger {
+.metric-button {
   position: relative;
 }
 
-.tooltip-trigger::after {
+.metric-button::after {
   content: attr(data-tooltip);
   position: absolute;
   bottom: calc(100% + 10px);
@@ -92,8 +92,9 @@ const defaultClasses =
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.2s,
-    visibility 0.2s;
+    opacity 0.5s,
+    visibility 0.5s;
+  transition-delay: 0.8s;
   z-index: 10;
   pointer-events: none;
   text-align: left;
@@ -101,7 +102,7 @@ const defaultClasses =
   line-height: 1.4;
 }
 
-.tooltip-trigger::before {
+.metric-button::before {
   content: '';
   position: absolute;
   bottom: calc(100% + 5px);
@@ -112,14 +113,20 @@ const defaultClasses =
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.2s,
-    visibility 0.2s;
+    opacity 0.5s,
+    visibility 0.5s;
+  transition-delay: 0.8s;
   z-index: 10;
 }
 
-.tooltip-trigger:hover::after,
-.tooltip-trigger:hover::before {
+.metric-button:hover::after,
+.metric-button:hover::before {
   opacity: 1;
   visibility: visible;
+}
+
+.metric-button:not(:hover)::after,
+.metric-button:not(:hover)::before {
+  transition-delay: 0s;
 }
 </style>
