@@ -104,7 +104,7 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
 </script>
 
 <template>
-  <div class="calculator-container rounded border border-gray-200 bg-gray-50 p-4">
+  <div class="calculator-container rounded-md border border-gray-200 bg-white p-4 shadow-sm">
     <div v-if="!currentDefinitions" class="py-4 text-center text-gray-500">
       Loading metric definitions...
     </div>
@@ -113,8 +113,8 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
     </div>
     <div v-else>
       <template v-if="selectedVersion === '4.0'">
-        <div v-for="groupName in orderedGroupNames" :key="groupName" class="mb-4 last:mb-0">
-          <h3 class="text-md mb-2 border-b border-gray-400 pb-1 font-bold text-gray-800">
+        <div v-for="groupName in orderedGroupNames" :key="groupName" class="mb-5 last:mb-0">
+          <h3 class="text-md mb-3 border-b border-gray-300 pb-2 font-bold text-gray-700">
             {{ groupName }}
             <span v-if="groupTooltips[groupName]" class="cursor-help text-sm text-gray-500">
               (?)
@@ -141,7 +141,7 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
               :key="childGroup"
               class="mb-4 ml-0 last:mb-0"
             >
-              <h4 class="mb-2 pb-1 text-sm font-semibold text-gray-700">
+              <h4 class="mb-2 border-b border-gray-200 pb-1 text-sm font-semibold text-gray-600">
                 {{ childGroup }}
               </h4>
 
@@ -164,8 +164,8 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
       </template>
 
       <template v-else>
-        <div v-for="groupName in orderedGroupNames" :key="groupName" class="mb-4 last:mb-0">
-          <h3 class="text-md mb-2 border-b border-gray-400 pb-1 font-bold text-gray-800">
+        <div v-for="groupName in orderedGroupNames" :key="groupName" class="mb-5 last:mb-0">
+          <h3 class="text-md mb-3 border-b border-gray-300 pb-2 font-bold text-gray-700">
             {{ groupName }}
             <span v-if="groupTooltips[groupName]" class="cursor-help text-sm text-gray-500">
               (?)
@@ -191,4 +191,9 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.calculator-container {
+  max-height: none;
+  overflow: visible;
+}
+</style>

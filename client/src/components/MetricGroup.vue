@@ -22,7 +22,7 @@ function getDescription(value: CvssTemplateBare): string {
 }
 
 const tooltipContent = (value: CvssTemplateBare) => {
-  return `${value.value_name}:\n${getDescription(value)}`
+  return `${value.value_name}: ${getDescription(value)}`
 }
 
 function selectValue(valueKey: string) {
@@ -30,7 +30,7 @@ function selectValue(valueKey: string) {
 }
 
 const selectedClasses =
-  'text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+  'text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-2 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
 const defaultClasses =
   'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
 </script>
@@ -51,10 +51,10 @@ const defaultClasses =
           size="xs"
           pill
           :class="[
-            'focus:ring-1',
+            'tooltip-trigger focus:ring-1',
             selectedValue === value.value_key ? selectedClasses : defaultClasses,
           ]"
-          :title="tooltipContent(value)"
+          :data-tooltip="tooltipContent(value)"
           @click="selectValue(value.value_key)"
         >
           <span class="mr-1 font-semibold">{{ value.value_key }}:</span> {{ value.value_name }}
@@ -70,5 +70,56 @@ const defaultClasses =
   margin-bottom: 0.25rem;
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
+}
+
+.tooltip-trigger {
+  position: relative;
+}
+
+.tooltip-trigger::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 300px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+  z-index: 10;
+  pointer-events: none;
+  text-align: left;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  line-height: 1.4;
+}
+
+.tooltip-trigger::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+  z-index: 10;
+}
+
+.tooltip-trigger:hover::after,
+.tooltip-trigger:hover::before {
+  opacity: 1;
+  visibility: visible;
 }
 </style>

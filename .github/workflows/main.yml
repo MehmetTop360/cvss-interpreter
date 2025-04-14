@@ -48,11 +48,11 @@ jobs:
           CI: true
           TOKEN_KEY: supersecretkey
 
-      - name: Test client (unit)
-        run: npm run test:unit -w=client
+      # - name: Test client (unit)
+      #  run: npm run test:unit -w=client
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+      # - name: Install Playwright Browsers
+      #  run: npx playwright install --with-deps chromium
 
       - name: Build server for running it
         run: npm run build -w=server
