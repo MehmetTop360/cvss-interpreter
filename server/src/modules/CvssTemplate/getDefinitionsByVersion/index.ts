@@ -1,10 +1,7 @@
 import { z } from 'zod'
 import { publicProcedure } from '@server/trpc'
-import {
-  CvssTemplate,
-  CvssTemplateBare,
-  CvssVersion,
-} from '@server/entities/CvssTemplate.entity'
+import type { CvssTemplateBare } from '@server/entities/CvssTemplate.entity' // Use type-only import
+import { CvssTemplate, CvssVersion } from '@server/entities/CvssTemplate.entity'
 
 const inputSchema = z.object({
   version: z.nativeEnum(CvssVersion),

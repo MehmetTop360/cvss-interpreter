@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCvssStore } from '@/stores/cvssStore'
 import MetricGroup from '@/components/MetricGroup.vue'
@@ -77,13 +77,6 @@ const orderedGroupNames = computed(() => {
     )
   }
 })
-
-const isParentGroup = (groupName: string): boolean => {
-  if (selectedVersion.value === '4.0') {
-    return Object.keys(parentChildMap).includes(groupName)
-  }
-  return true
-}
 
 const getChildGroups = (parentGroup: string): string[] => {
   if (selectedVersion.value !== '4.0') return []

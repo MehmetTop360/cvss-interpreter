@@ -44,14 +44,14 @@ watch(
       </div>
     </div>
     <div class="flex-grow overflow-y-auto pb-4">
-      <div class="flex flex-col gap-6 md:flex-row">
-        <div class="w-full md:w-1/2 lg:w-3/5">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 lg:col-span-7">
           <CvssCalculator />
         </div>
 
-        <div class="w-full md:w-1/2 lg:w-2/5">
-          <h2 class="mb-2 text-lg font-semibold text-gray-800">Interpretation</h2>
-          <div class="interpretation-wrapper pr-2">
+        <div class="col-span-12 min-h-[500px] lg:col-span-5">
+          <h2 class="mb-2 text-base font-semibold text-gray-700">Interpretation</h2>
+          <div class="h-full">
             <InterpretationDisplay />
           </div>
         </div>
@@ -60,4 +60,10 @@ watch(
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 1024px) {
+  .overflow-y-auto {
+    height: calc(100vh - 140px);
+  }
+}
+</style>

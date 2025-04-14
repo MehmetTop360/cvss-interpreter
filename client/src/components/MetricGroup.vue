@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
 import { FwbButton, FwbButtonGroup } from 'flowbite-vue'
 import type { CvssTemplateBare } from '@mono/server/src/shared/entities'
 import { useCvssStore } from '@/stores/cvssStore'
@@ -21,6 +20,7 @@ function getDescription(value: CvssTemplateBare): string {
   const key = cvssStore.preferredDescriptionKey
   return value[key] || value.official_description || 'No description available.'
 }
+
 const tooltipContent = (value: CvssTemplateBare) => {
   return `${value.value_name}:\n${getDescription(value)}`
 }
@@ -51,7 +51,7 @@ const defaultClasses =
           size="xs"
           pill
           :class="[
-            'focus:ring-2',
+            'focus:ring-1',
             selectedValue === value.value_key ? selectedClasses : defaultClasses,
           ]"
           :title="tooltipContent(value)"
@@ -68,5 +68,7 @@ const defaultClasses =
 .fwb-button-group > button {
   margin-right: 0.25rem;
   margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
 }
 </style>
