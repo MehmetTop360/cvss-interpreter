@@ -6,6 +6,8 @@ import CvssCalculator from '@/components/CvssCalculator.vue'
 import InterpretationDisplay from '@/components/InterpretationDisplay.vue'
 import ReportGenerator from '@/components/ReportGenerator.vue'
 import { defaultMetricsV3_1, defaultMetricsV4_0 } from '@/constants/cvssConstants'
+import { Cvss3P1, Cvss4P0 } from 'ae-cvss-calculator'
+
 const cvssStore = useCvssStore()
 const { cvssString, selectedVersion } = storeToRefs(cvssStore)
 const { setSelectedMetrics } = cvssStore
@@ -16,8 +18,107 @@ onMounted(() => {
   }
 })
 
-const currentScore = computed(() => {
-  return selectedVersion.value === '4.0' ? '0.0 (None)' : '0.0'
+type SeverityRating = 'None' | 'Low' | 'Medium' | 'High' | 'Critical' | 'Invalid' | 'Error'
+
+function getSeverityRating(score: number | null): SeverityRating {
+  if (score === null || score === undefined) return 'None'
+  if (score === 0.0) return 'None'
+  if (score >= 0.1 && score <= 3.9) return 'Low'
+  if (score >= 4.0 && score <= 6.9) return 'Medium'
+  if (score >= 7.0 && score <= 8.9) return 'High'
+  if (score >= 9.0 && score <= 10.0) return 'Critical'
+  return 'None'
+}
+
+const calculatedScoreData = computed(() => {
+  const vector = cvssString.value
+  const version = selectedVersion.value
+  let scoreValue: number | null = null
+  let severity: SeverityRating = 'None'
+  let display: string = '0.0 (None)'
+  let status: 'valid' | 'invalid' | 'error' | 'nodata' = 'nodata'
+
+  if (
+    !vector ||
+    (vector.startsWith('CVSS:4.0/') && vector.length <= 9) ||
+    (vector.startsWith('CVSS:3.1/') && vector.length <= 9)
+  ) {
+    display = version === '4.0' ? '0.0 (None)' : '0.0 (None)'
+    status = 'valid'
+    scoreValue = 0.0
+    severity = 'None'
+  } else {
+    try {
+      let calculator
+      let scores
+
+      if (version === '4.0' && vector.startsWith('CVSS:4.0/')) {
+        calculator = new Cvss4P0(vector)
+        scores = calculator.calculateScores()
+        scoreValue = scores?.overall ?? null
+        severity = getSeverityRating(scoreValue)
+        status = 'valid'
+      } else if (version === '3.1' && vector.startsWith('CVSS:3.1/')) {
+        calculator = new Cvss3P1(vector)
+        scores = calculator.calculateScores()
+        scoreValue = scores?.overall ?? scores?.base ?? null
+        severity = getSeverityRating(scoreValue)
+        status = 'valid'
+      } else {
+        console.warn(
+          `Vector string "${vector}" does not match selected version "${version}" or is invalid.`
+        )
+        severity = 'Invalid'
+        status = 'invalid'
+      }
+
+      if (status === 'valid') {
+        if (scoreValue !== null) {
+          display = `${scoreValue.toFixed(1)} (${severity})`
+        } else {
+          console.warn('Score calculation returned null for vector:', vector)
+          severity = 'Error'
+          status = 'error'
+        }
+      }
+    } catch (error) {
+      console.error('Error calculating CVSS score:', error, 'Vector:', vector)
+      severity = 'Invalid'
+      status = 'invalid'
+    }
+  }
+
+  if (status === 'invalid') display = 'Invalid Vector'
+  if (status === 'error') display = 'Calculation Error'
+  if (scoreValue === 0.0) severity = 'None'
+
+  return {
+    score: scoreValue,
+    severity: severity,
+    display: display,
+    status: status,
+  }
+})
+
+const scoreDisplayClass = computed(() => {
+  const severity = calculatedScoreData.value.severity
+  const baseClasses = 'mt-2 whitespace-nowrap rounded border px-3 py-2 text-sm font-medium md:mt-0'
+  switch (severity) {
+    case 'None':
+      return `${baseClasses} bg-gray-100 text-gray-700 border-gray-300`
+    case 'Low':
+      return `${baseClasses} bg-green-100 text-green-800 border-green-300`
+    case 'Medium':
+      return `${baseClasses} bg-yellow-100 text-yellow-800 border-yellow-300`
+    case 'High':
+      return `${baseClasses} bg-orange-100 text-orange-800 border-orange-300`
+    case 'Critical':
+      return `${baseClasses} bg-red-100 text-red-800 border-red-300 font-semibold`
+    case 'Invalid':
+    case 'Error':
+    default:
+      return `${baseClasses} bg-gray-200 text-gray-600 border-gray-400`
+  }
 })
 
 const cvssVersionFullName = computed(() => {
@@ -43,16 +144,16 @@ function resetMetrics() {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-gray-50">
-    <div class="sticky top-0 z-10 px-4 pt-2 pb-3 mb-4 bg-white border-b border-gray-300 shadow-sm">
-      <div class="flex items-center justify-between mb-2">
+  <div class="flex h-full flex-col bg-gray-50">
+    <div class="sticky top-0 z-10 mb-4 border-b border-gray-300 bg-white px-4 pb-3 pt-2 shadow-sm">
+      <div class="mb-2 flex items-center justify-between">
         <h2 class="text-base font-semibold text-gray-700">
           {{ cvssVersionFullName }} Vector & Score
         </h2>
         <div class="flex space-x-2">
           <button
             @click="resetMetrics"
-            class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-700 transition-colors bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
             data-tooltip="Reset all metrics to default values"
           >
             <svg
@@ -66,14 +167,14 @@ function resetMetrics() {
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
               />
             </svg>
             Reset
           </button>
           <button
             @click="copyToClipboard"
-            class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-700 transition-colors bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
             data-tooltip="Copy CVSS vector string to clipboard"
           >
             <svg
@@ -104,22 +205,18 @@ function resetMetrics() {
             </svg>
             {{ copiedToClipboard ? 'Copied!' : 'Copy' }}
           </button>
-          <ReportGenerator :current-score="currentScore" />
+          <ReportGenerator :current-score="calculatedScoreData.display" />
         </div>
       </div>
 
-      <div class="p-3 border border-gray-200 rounded-md bg-gray-50">
+      <div class="rounded-md border border-gray-200 bg-gray-50 p-3">
         <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
           <div
-            class="flex-grow px-3 py-2 text-sm bg-white border border-gray-200 rounded shadow-inner"
+            class="flex-grow rounded border border-gray-200 bg-white px-3 py-2 text-sm shadow-inner"
           >
-            <p class="font-mono text-gray-800 break-all">{{ cvssString }}</p>
+            <p class="break-all font-mono text-gray-800">{{ cvssString }}</p>
           </div>
-          <div
-            class="px-3 py-2 mt-2 text-sm font-medium text-blue-800 border border-blue-200 rounded whitespace-nowrap bg-blue-50 md:mt-0"
-          >
-            Score: {{ currentScore }}
-          </div>
+          <div :class="scoreDisplayClass">Score: {{ calculatedScoreData.display }}</div>
         </div>
       </div>
     </div>

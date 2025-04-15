@@ -430,7 +430,7 @@ function generateReportHtml(): string {
 
   html += `
         </div> <div class="footer">
-          <p>This report was generated using the CVSS Interpreter Tool.</p>
+          <p>This report was generated using the CVSS Interpreter.</p>
         </div>
       </div> </body>
     </html>

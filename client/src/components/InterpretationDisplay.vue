@@ -27,7 +27,6 @@ const currentDefaults = computed(() => {
 function shouldDisplayMetric(metricKey: string): boolean {
   const currentValue = selectedMetrics.value?.[metricKey]
   const defaultValue = currentDefaults.value?.[metricKey] ?? 'X'
-
   const groups = structuredMetricGroups.value
   let isBase = false
   if (selectedVersion.value === '4.0') {
@@ -37,7 +36,6 @@ function shouldDisplayMetric(metricKey: string): boolean {
     const baseGroup = groups.find((g) => g.name === 'Base Score')
     isBase = !!baseGroup?.metrics?.includes(metricKey)
   }
-
   return isBase || (currentValue !== undefined && currentValue !== defaultValue)
 }
 
@@ -45,7 +43,6 @@ const activeStructuredGroups = computed((): StructuredMetricGroup[] => {
   return structuredMetricGroups.value
     .map((parentGroup): StructuredMetricGroup | null => {
       const activeParentMetrics = parentGroup.metrics?.filter(shouldDisplayMetric) ?? []
-
       const activeChildren =
         parentGroup.children
           ?.map((childGroup): StructuredMetricGroup | null => {
@@ -126,6 +123,7 @@ function getValueColor(value: string | undefined): string {
 
 function toggleMetric(metricKey: string) {
   expandedMetrics.value[metricKey] = !expandedMetrics.value[metricKey]
+  updateAllExpandedState()
 }
 
 function toggleGroup(groupName: string) {
@@ -136,12 +134,18 @@ function toggleGroup(groupName: string) {
     for (const group of groups) {
       if (group.name === groupName) {
         group.metrics?.forEach((metricKey) => {
-          expandedMetrics.value[metricKey] = isExpanded
+          if (expandedMetrics.value[metricKey] !== undefined) {
+            expandedMetrics.value[metricKey] = isExpanded
+          }
         })
         group.children?.forEach((child) => {
-          expandedGroups.value[child.name] = isExpanded
+          if (expandedGroups.value[child.name] !== undefined) {
+            expandedGroups.value[child.name] = isExpanded
+          }
           child.metrics?.forEach((metricKey) => {
-            expandedMetrics.value[metricKey] = isExpanded
+            if (expandedMetrics.value[metricKey] !== undefined) {
+              expandedMetrics.value[metricKey] = isExpanded
+            }
           })
         })
         return true
@@ -154,25 +158,62 @@ function toggleGroup(groupName: string) {
   }
 
   findAndToggle(activeStructuredGroups.value)
+  updateAllExpandedState()
 }
 
 function toggleAllMetrics() {
-  allExpanded.value = !allExpanded.value
-  const newState = allExpanded.value
+  const newState = !allExpanded.value
+  allExpanded.value = newState
 
   const setExpansionState = (groups: StructuredMetricGroup[]) => {
     groups.forEach((group) => {
-      expandedGroups.value[group.name] = newState
+      if (expandedGroups.value[group.name] !== undefined) {
+        expandedGroups.value[group.name] = newState
+      }
       group.metrics?.forEach((metricKey) => {
-        expandedMetrics.value[metricKey] = newState
+        if (expandedMetrics.value[metricKey] !== undefined) {
+          expandedMetrics.value[metricKey] = newState
+        }
       })
       if (group.children) {
         setExpansionState(group.children)
       }
     })
   }
-
   setExpansionState(activeStructuredGroups.value)
+}
+
+function checkAllExpandedState(): boolean {
+  if (!hasActiveMetrics.value) return true
+
+  let allAreCurrentlyExpanded = true
+  const checkExpansion = (groups: StructuredMetricGroup[]) => {
+    for (const group of groups) {
+      if (expandedGroups.value[group.name] === false) {
+        allAreCurrentlyExpanded = false
+        return
+      }
+      if (group.metrics) {
+        for (const metricKey of group.metrics) {
+          if (expandedMetrics.value[metricKey] === false) {
+            allAreCurrentlyExpanded = false
+            return
+          }
+        }
+      }
+      if (group.children && allAreCurrentlyExpanded) {
+        checkExpansion(group.children)
+        if (!allAreCurrentlyExpanded) return
+      }
+    }
+  }
+
+  checkExpansion(activeStructuredGroups.value)
+  return allAreCurrentlyExpanded
+}
+
+function updateAllExpandedState() {
+  allExpanded.value = checkAllExpandedState()
 }
 
 function initializeExpandedState() {
@@ -192,41 +233,7 @@ function initializeExpandedState() {
     })
   }
   initialize(activeStructuredGroups.value)
-
-  let allAreExpanded = true
-  const checkExpansion = (groups: StructuredMetricGroup[]) => {
-    for (const group of groups) {
-      if (
-        expandedGroups.value[group.name] === undefined ||
-        expandedGroups.value[group.name] === false
-      ) {
-        allAreExpanded = false
-        return
-      }
-      if (group.metrics) {
-        for (const metricKey of group.metrics) {
-          if (
-            expandedMetrics.value[metricKey] === undefined ||
-            expandedMetrics.value[metricKey] === false
-          ) {
-            allAreExpanded = false
-            return
-          }
-        }
-      }
-      if (group.children) {
-        checkExpansion(group.children)
-        if (!allAreExpanded) return
-      }
-    }
-  }
-
-  checkExpansion(activeStructuredGroups.value)
-  if (hasActiveMetrics.value) {
-    allExpanded.value = allAreExpanded
-  } else {
-    allExpanded.value = true
-  }
+  updateAllExpandedState()
 }
 
 watch(
@@ -240,14 +247,14 @@ watch(
 
 <template>
   <div
-    class="h-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm interpretation-container"
+    class="interpretation-container h-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
   >
-    <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-200">
-      <h2 class="text-base font-semibold text-gray-700">Interpretations</h2>
+    <div class="mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
+      <h2 class="text-base font-semibold text-gray-700">Interpretation</h2>
       <button
         v-if="hasActiveMetrics"
         @click="toggleAllMetrics"
-        class="flex items-center px-2 py-1 text-xs font-medium text-blue-600 rounded-md hover:bg-blue-50 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        class="flex items-center rounded-md px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
       >
         <span class="mr-1">{{ allExpanded ? 'Collapse All' : 'Expand All' }}</span>
         <svg
@@ -283,25 +290,25 @@ watch(
       </button>
     </div>
 
-    <div v-if="!currentDefinitions" class="py-4 text-sm text-center text-gray-500">
+    <div v-if="!currentDefinitions" class="py-4 text-center text-sm text-gray-500">
       Loading definitions or select a version...
     </div>
     <div
       v-else-if="structuredMetricGroups.length === 0"
-      class="py-4 text-sm text-center text-gray-500"
+      class="py-4 text-center text-sm text-gray-500"
     >
       No metrics defined for this version.
     </div>
-    <div v-else-if="!hasActiveMetrics" class="py-4 text-sm text-center text-gray-500">
+    <div v-else-if="!hasActiveMetrics" class="py-4 text-center text-sm text-gray-500">
       Only default metric values are selected. Change a metric value to see its interpretation.
     </div>
 
-    <div v-else class="h-full interpretation-list-wrapper">
-      <div class="space-y-4 interpretation-list">
+    <div v-else class="interpretation-list-wrapper h-full">
+      <div class="interpretation-list space-y-4">
         <div v-for="parentGroup in activeStructuredGroups" :key="parentGroup.name">
           <div
             @click="toggleGroup(parentGroup.name)"
-            class="flex items-center justify-between px-3 py-2 mb-2 border border-gray-200 rounded-md cursor-pointer group-header bg-gray-50 hover:bg-gray-100"
+            class="group-header mb-2 flex cursor-pointer items-center justify-between rounded-md border border-gray-200 bg-gray-50 px-3 py-2 hover:bg-gray-100"
           >
             <h3 class="text-sm font-semibold text-gray-800">{{ parentGroup.name }}</h3>
             <svg
@@ -310,7 +317,7 @@ watch(
               viewBox="0 0 24 24"
               stroke-width="2"
               stroke="currentColor"
-              class="w-4 h-4 text-gray-500 transition-transform duration-200"
+              class="h-4 w-4 text-gray-500 transition-transform duration-200"
               :class="{ 'rotate-180 transform': expandedGroups[parentGroup.name] }"
             >
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -318,18 +325,18 @@ watch(
           </div>
 
           <div
-            v-if="expandedGroups[parentGroup.name]"
-            class="pl-3 ml-2 space-y-3 border-l-2 border-gray-100"
+            v-show="expandedGroups[parentGroup.name]"
+            class="ml-2 space-y-3 border-l-2 border-gray-100 pl-3"
           >
             <div v-if="parentGroup.metrics && parentGroup.metrics.length > 0" class="space-y-3">
               <div
                 v-for="metricKey in parentGroup.metrics"
                 :key="metricKey"
-                class="bg-white border border-gray-100 rounded-md shadow-sm metric-interpretation"
+                class="metric-interpretation rounded-md border border-gray-100 bg-white shadow-sm"
               >
                 <div
                   @click="toggleMetric(metricKey)"
-                  class="flex items-center justify-between px-3 py-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
+                  class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50"
                 >
                   <div class="flex items-center">
                     <h5 class="text-xs font-medium text-gray-700">
@@ -358,7 +365,7 @@ watch(
                     />
                   </svg>
                 </div>
-                <div v-if="expandedMetrics[metricKey]" class="px-3 pt-2 pb-3">
+                <div v-show="expandedMetrics[metricKey]" class="px-3 pb-3 pt-2">
                   <p class="mb-1 text-xs font-semibold text-gray-800">
                     {{ getSelectedDefinition(metricKey)?.value_name || 'N/A' }}
                   </p>
@@ -394,17 +401,17 @@ watch(
                 </div>
 
                 <div
-                  v-if="expandedGroups[childGroup.name] && childGroup.metrics"
-                  class="pl-3 ml-2 space-y-3 border-l-2 border-gray-100"
+                  v-show="expandedGroups[childGroup.name] && childGroup.metrics"
+                  class="ml-2 space-y-3 border-l-2 border-gray-100 pl-3"
                 >
                   <div
                     v-for="metricKey in childGroup.metrics"
                     :key="metricKey"
-                    class="bg-white border border-gray-100 rounded-md shadow-sm metric-interpretation"
+                    class="metric-interpretation rounded-md border border-gray-100 bg-white shadow-sm"
                   >
                     <div
                       @click="toggleMetric(metricKey)"
-                      class="flex items-center justify-between px-3 py-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
+                      class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50"
                     >
                       <div class="flex items-center">
                         <h5 class="text-xs font-medium text-gray-700">
@@ -433,7 +440,7 @@ watch(
                         />
                       </svg>
                     </div>
-                    <div v-if="expandedMetrics[metricKey]" class="px-3 pt-2 pb-3">
+                    <div v-show="expandedMetrics[metricKey]" class="px-3 pb-3 pt-2">
                       <p class="mb-1 text-xs font-semibold text-gray-800">
                         {{ getSelectedDefinition(metricKey)?.value_name || 'N/A' }}
                       </p>
