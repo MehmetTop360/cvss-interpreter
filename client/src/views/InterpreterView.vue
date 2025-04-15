@@ -22,6 +22,9 @@ const { cvssString, selectedVersion } = storeToRefs(cvssStore)
 const { setVersion, setSelectedMetrics } = cvssStore
 
 const isProcessingUrl = ref(false)
+const editMode = ref(false)
+const editableVectorString = ref('')
+const editableVectorError = ref('')
 
 function isValidMetricValue(version: '3.1' | '4.0', metric: string, value: string): boolean {
   const definitions = cvssStore.definitions[version]
@@ -66,7 +69,7 @@ function parseAndApplyVector(vector: string) {
     if (validVectorPrefix && version) {
       if (!cvssStore.definitions[version]) {
         console.warn(`Definitions not ready for version ${version}, cannot fully validate vector.`)
-        shouldReset = true // Reset if definitions aren't loaded
+        shouldReset = true
       } else {
         const currentOrder = version === '4.0' ? metricOrderV4_0 : metricOrderV3_1
         const metricPairRegex = /([A-Z]{1,3}[2-3]?):([A-Za-z0-9]{1,5})/g
@@ -270,6 +273,58 @@ function resetMetrics() {
   }
 }
 
+function startEditing() {
+  editableVectorString.value = cvssString.value
+  editMode.value = true
+  editableVectorError.value = ''
+}
+
+function applyVectorChanges() {
+  if (!editableVectorString.value) {
+    resetMetrics()
+    editMode.value = false
+    return
+  }
+
+  if (!editableVectorString.value.startsWith('CVSS:')) {
+    editableVectorError.value = 'Vector must start with CVSS: prefix'
+    return
+  }
+
+  const prefix = editableVectorString.value.split('/')[0]
+  let version: '3.1' | '4.0' | null = null
+
+  if (prefix === 'CVSS:4.0') {
+    version = '4.0'
+  } else if (prefix === 'CVSS:3.1') {
+    version = '3.1'
+  } else {
+    editableVectorError.value = 'Invalid CVSS version (must be 3.1 or 4.0)'
+    return
+  }
+
+  try {
+    if (version === '4.0') {
+      new Cvss4P0(editableVectorString.value)
+    } else {
+      new Cvss3P1(editableVectorString.value)
+    }
+
+    editMode.value = false
+    parseAndApplyVector(editableVectorString.value)
+
+    router.replace({ hash: editableVectorString.value })
+  } catch (error) {
+    editableVectorError.value = 'Invalid vector format'
+    console.error('Error validating CVSS string:', error)
+  }
+}
+
+function cancelEditing() {
+  editMode.value = false
+  editableVectorError.value = ''
+}
+
 watch(cvssString, (newVector) => {
   if (isProcessingUrl.value) {
     return
@@ -289,8 +344,8 @@ watch(cvssString, (newVector) => {
 </script>
 
 <template>
-  <div class="flex h-full flex-col bg-gray-50">
-    <div class="sticky top-0 z-10 mb-4 border-b border-gray-300 bg-white px-4 pb-3 pt-2 shadow-sm">
+  <div class="flex h-[calc(100vh-8rem)] flex-col bg-gray-50">
+    <div class="sticky top-0 z-20 mb-4 border-b border-gray-300 bg-white px-4 pb-3 pt-2 shadow-sm">
       <div class="mb-2 flex items-center justify-between">
         <h2 class="text-base font-semibold text-gray-700">
           {{ cvssVersionFullName }} Vector & Score
@@ -357,16 +412,93 @@ watch(cvssString, (newVector) => {
       <div class="rounded-md border border-gray-200 bg-gray-50 p-3">
         <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
           <div
-            class="flex-grow rounded border border-gray-200 bg-white px-3 py-2 text-sm shadow-inner"
+            v-if="!editMode"
+            class="flex flex-grow items-center rounded border border-gray-200 bg-white px-3 py-2 text-sm shadow-inner"
           >
-            <p class="break-all font-mono text-gray-800">{{ cvssString }}</p>
+            <p class="flex-grow break-all font-mono text-gray-800">{{ cvssString }}</p>
+            <button
+              @click="startEditing"
+              class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none"
+              title="Edit vector string"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-4 w-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                />
+              </svg>
+            </button>
           </div>
+
+          <div v-else class="flex flex-grow flex-col">
+            <div class="flex rounded border border-gray-200 bg-white shadow-inner">
+              <input
+                v-model="editableVectorString"
+                type="text"
+                class="flex-grow rounded-l border-none px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                placeholder="CVSS:4.0/AV:N/AC:L/..."
+              />
+              <div class="flex border-l border-gray-200">
+                <button
+                  @click="applyVectorChanges"
+                  class="px-2 text-green-600 hover:bg-gray-50 hover:text-green-800 focus:outline-none"
+                  title="Apply changes"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-5 w-5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                </button>
+                <button
+                  @click="cancelEditing"
+                  class="px-2 text-red-600 hover:bg-gray-50 hover:text-red-800 focus:outline-none"
+                  title="Cancel editing"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-5 w-5"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p v-if="editableVectorError" class="mt-1 text-xs text-red-600">
+              {{ editableVectorError }}
+            </p>
+            <p v-else class="mt-1 text-xs text-gray-500">
+              Enter a valid CVSS {{ selectedVersion }} vector string
+            </p>
+          </div>
+
           <div :class="scoreDisplayClass">Score: {{ calculatedScoreData.display }}</div>
         </div>
       </div>
     </div>
 
-    <div class="flex-grow px-4 pb-6">
+    <div class="flex-grow overflow-y-auto px-4 pb-6 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div class="col-span-12 lg:col-span-7">
           <CvssCalculator />

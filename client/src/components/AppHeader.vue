@@ -22,6 +22,7 @@ function closeMobileMenu() {
 }
 
 const showCalculatorControls = computed(() => route.name === 'Calculator')
+const showComparisonControls = computed(() => route.name === 'Comparison')
 </script>
 
 <template>
@@ -43,6 +44,12 @@ const showCalculatorControls = computed(() => route.name === 'Calculator')
           >
             <VersionSelector />
             <DescriptionTypeSelector />
+          </div>
+          <div
+            v-else-if="showComparisonControls"
+            class="hidden items-center space-x-3 border-l border-gray-200 pl-4 sm:ml-4 sm:flex"
+          >
+            <VersionSelector />
           </div>
         </div>
 
@@ -119,10 +126,16 @@ const showCalculatorControls = computed(() => route.name === 'Calculator')
       </div>
       <div
         v-if="showCalculatorControls"
-        class="flex items-center space-x-6 border-t border-gray-200 px-4 py-4"
+        class="flex flex-wrap items-center space-x-6 border-t border-gray-200 px-4 py-4"
       >
         <VersionSelector />
         <DescriptionTypeSelector />
+      </div>
+      <div
+        v-else-if="showComparisonControls"
+        class="flex items-center space-x-6 border-t border-gray-200 px-4 py-4"
+      >
+        <VersionSelector />
       </div>
     </div>
   </header>

@@ -160,6 +160,33 @@ export const useCvssStore = defineStore('cvss', {
 
       return parts.length > 0 ? `${prefix}/${parts.join('/')}` : prefix
     },
+    defaultCvssString(state): string {
+      const version = state.selectedVersion
+      const prefix = `CVSS:${version}`
+      const defaults = version === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
+      const order = state.metricOrder[version]
+      const groups = state.metricGroups[version]
+
+      if (!order || !groups) return prefix
+
+      let baseMetricKeys: string[] = []
+      if (version === '4.0') {
+        baseMetricKeys = [
+          ...(groups['Exploitability Metrics'] || []),
+          ...(groups['Vulnerable System Impact Metrics'] || []),
+          ...(groups['Subsequent System Impact Metrics'] || []),
+        ]
+      } else {
+        baseMetricKeys = groups['Base Score'] || []
+      }
+
+      const parts = baseMetricKeys
+        .filter((key) => order.includes(key))
+        .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+        .map((key) => `${key}:${defaults[key] ?? 'X'}`)
+
+      return `${prefix}/${parts.join('/')}`
+    },
     groupedDefinitions(state): Record<string, CvssTemplateBare[]> {
       const defs = state.definitions[state.selectedVersion]
       if (!defs) return {}
@@ -313,6 +340,12 @@ export const useCvssStore = defineStore('cvss', {
       if (changed) {
         this.selectedMetrics = newSelectedMetrics
       }
+    },
+
+    resetCurrentMetrics() {
+      const currentDefaults =
+        this.selectedVersion === '4.0' ? { ...defaultMetricsV4_0 } : { ...defaultMetricsV3_1 }
+      this.selectedMetrics = currentDefaults
     },
 
     _initializeMetricsForCurrentVersion() {
