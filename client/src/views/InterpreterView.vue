@@ -1,22 +1,147 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCvssStore } from '@/stores/cvssStore'
 import CvssCalculator from '@/components/CvssCalculator.vue'
 import InterpretationDisplay from '@/components/InterpretationDisplay.vue'
 import ReportGenerator from '@/components/ReportGenerator.vue'
-import { defaultMetricsV3_1, defaultMetricsV4_0 } from '@/constants/cvssConstants'
+import {
+  defaultMetricsV3_1,
+  defaultMetricsV4_0,
+  metricOrderV3_1,
+  metricOrderV4_0,
+} from '@/constants/cvssConstants'
 import { Cvss3P1, Cvss4P0 } from 'ae-cvss-calculator'
+import { useRoute, useRouter } from 'vue-router'
 
 const cvssStore = useCvssStore()
-const { cvssString, selectedVersion } = storeToRefs(cvssStore)
-const { setSelectedMetrics } = cvssStore
+const route = useRoute()
+const router = useRouter()
 
-onMounted(() => {
-  if (!cvssStore.definitions[cvssStore.selectedVersion]) {
-    cvssStore.fetchDefinitions()
+const { cvssString, selectedVersion } = storeToRefs(cvssStore)
+const { setVersion, setSelectedMetrics } = cvssStore
+
+const isProcessingUrl = ref(false)
+
+function isValidMetricValue(version: '3.1' | '4.0', metric: string, value: string): boolean {
+  const definitions = cvssStore.definitions[version]
+  if (!definitions) {
+    console.warn(`Definitions for version ${version} not loaded yet for validation.`)
+    return false
+  }
+  return definitions.some((def) => def.metric_key === metric && def.value_key === value)
+}
+
+function parseAndApplyVector(vector: string) {
+  if (!vector || typeof vector !== 'string' || !vector.startsWith('CVSS:')) {
+    resetMetrics()
+    return
+  }
+  isProcessingUrl.value = true
+  let shouldReset = false
+
+  try {
+    const vectorPrefix = vector.split('/')[0]
+    const metricsPart = vector.substring(vectorPrefix.length + 1)
+    let version: '3.1' | '4.0' | null = null
+    let newMetrics: Record<string, string> = {}
+    let baseDefaults: Record<string, string> = {}
+    let validVectorPrefix = false
+
+    if (vectorPrefix === 'CVSS:4.0') {
+      version = '4.0'
+      baseDefaults = defaultMetricsV4_0
+      newMetrics = { ...baseDefaults }
+      validVectorPrefix = true
+    } else if (vectorPrefix === 'CVSS:3.1') {
+      version = '3.1'
+      baseDefaults = defaultMetricsV3_1
+      newMetrics = { ...baseDefaults }
+      validVectorPrefix = true
+    } else {
+      console.error('Invalid CVSS vector prefix:', vectorPrefix)
+      shouldReset = true
+    }
+
+    if (validVectorPrefix && version) {
+      if (!cvssStore.definitions[version]) {
+        console.warn(`Definitions not ready for version ${version}, cannot fully validate vector.`)
+        shouldReset = true // Reset if definitions aren't loaded
+      } else {
+        const currentOrder = version === '4.0' ? metricOrderV4_0 : metricOrderV3_1
+        const metricPairRegex = /([A-Z]{1,3}[2-3]?):([A-Za-z0-9]{1,5})/g
+        let match
+        let parseError = false
+
+        while ((match = metricPairRegex.exec(metricsPart)) !== null) {
+          const key = match[1]
+          const value = match[2]
+
+          if (currentOrder.includes(key)) {
+            if (isValidMetricValue(version, key, value)) {
+              newMetrics[key] = value
+            } else {
+              console.warn(`Invalid value "${value}" for metric "${key}" in version ${version}`)
+              parseError = true
+              break
+            }
+          } else {
+            console.warn(`Unknown metric "${key}" in version ${version}`)
+            parseError = true
+            break
+          }
+        }
+
+        if (!parseError) {
+          setVersion(version)
+          nextTick(() => {
+            setSelectedMetrics(newMetrics)
+            console.log('Applied metrics from URL hash:', newMetrics)
+          })
+        } else {
+          console.error('Failed to apply vector from URL hash due to parsing errors.')
+          shouldReset = true
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Error parsing CVSS vector from URL hash:', e)
+    shouldReset = true
+  } finally {
+    if (shouldReset) {
+      resetMetrics()
+    }
+    setTimeout(() => {
+      isProcessingUrl.value = false
+    }, 50)
+  }
+}
+
+onMounted(async () => {
+  await cvssStore.fetchDefinitions()
+  const hash = route.hash
+  if (hash && hash.startsWith('#CVSS:')) {
+    const vectorFromHash = hash.substring(1)
+    console.log('Parsing vector from URL hash on mount:', vectorFromHash)
+    parseAndApplyVector(vectorFromHash)
+  } else if (!cvssStore.definitions[cvssStore.selectedVersion]) {
+    await cvssStore.fetchDefinitions()
   }
 })
+
+watch(
+  () => route.hash,
+  (newHash, oldHash) => {
+    if (newHash !== oldHash && newHash && newHash.startsWith('#CVSS:') && !isProcessingUrl.value) {
+      const vectorFromHash = newHash.substring(1)
+      console.log('Parsing vector from URL hash change:', vectorFromHash)
+      parseAndApplyVector(vectorFromHash)
+    } else if (!newHash && oldHash && !isProcessingUrl.value) {
+      console.log('Hash removed, resetting metrics.')
+      resetMetrics()
+    }
+  }
+)
 
 type SeverityRating = 'None' | 'Low' | 'Medium' | 'High' | 'Critical' | 'Invalid' | 'Error'
 
@@ -140,7 +265,27 @@ function resetMetrics() {
   const defaults = selectedVersion.value === '4.0' ? defaultMetricsV4_0 : defaultMetricsV3_1
   const resetValues = { ...defaults }
   setSelectedMetrics(resetValues)
+  if (route.hash) {
+    router.replace({ hash: '' })
+  }
 }
+
+watch(cvssString, (newVector) => {
+  if (isProcessingUrl.value) {
+    return
+  }
+  const currentHash = route.hash
+  const newHash = `#${newVector}`
+  const isValidScore = calculatedScoreData.value.status === 'valid'
+
+  if (isValidScore && newVector && newVector.includes('/') && newHash !== currentHash) {
+    router.replace({ hash: newHash })
+  } else if (!isValidScore && currentHash && currentHash !== '#') {
+    router.replace({ hash: '' })
+  } else if (newVector && !newVector.includes('/') && currentHash && currentHash !== '#') {
+    router.replace({ hash: '' })
+  }
+})
 </script>
 
 <template>
@@ -150,7 +295,7 @@ function resetMetrics() {
         <h2 class="text-base font-semibold text-gray-700">
           {{ cvssVersionFullName }} Vector & Score
         </h2>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap justify-end gap-2 sm:flex-nowrap sm:space-x-2">
           <button
             @click="resetMetrics"
             class="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
@@ -222,7 +367,7 @@ function resetMetrics() {
     </div>
 
     <div class="flex-grow px-4 pb-6">
-      <div class="grid grid-cols-12 gap-5">
+      <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div class="col-span-12 lg:col-span-7">
           <CvssCalculator />
         </div>

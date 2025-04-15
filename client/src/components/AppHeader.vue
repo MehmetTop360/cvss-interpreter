@@ -67,7 +67,7 @@ const showCalculatorControls = computed(() => route.name === 'Calculator')
             type="button"
             class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-controls="mobile-menu"
-            :aria-expanded="isMobileMenuOpen.toString()"
+            :aria-expanded="isMobileMenuOpen"
           >
             <span class="sr-only">Open main menu</span>
             <svg
@@ -117,7 +117,10 @@ const showCalculatorControls = computed(() => route.name === 'Calculator')
           {{ link.label }}
         </RouterLink>
       </div>
-      <div v-if="showCalculatorControls" class="space-y-2 border-t border-gray-200 px-4 py-4">
+      <div
+        v-if="showCalculatorControls"
+        class="flex items-center space-x-6 border-t border-gray-200 px-4 py-4"
+      >
         <VersionSelector />
         <DescriptionTypeSelector />
       </div>

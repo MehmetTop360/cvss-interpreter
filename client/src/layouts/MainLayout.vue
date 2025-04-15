@@ -6,7 +6,7 @@ import AppHeader from '@/components/AppHeader.vue'
   <div class="min-h-screen bg-gray-100">
     <AppHeader />
     <main>
-      <div class="container mx-auto px-6 pb-8">
+      <div class="container mx-auto px-4 pb-8 sm:px-6 lg:px-8">
         <RouterView />
       </div>
     </main>
