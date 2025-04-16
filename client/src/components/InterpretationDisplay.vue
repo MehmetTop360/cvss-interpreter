@@ -94,31 +94,52 @@ function getMetricName(metricKey: string): string {
 }
 
 function getValueColor(value: string | undefined): string {
-  if (!value) return 'bg-gray-100 text-gray-700 border border-gray-200'
+  if (!value)
+    return 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
   value = value.toUpperCase()
-
-  if (value === 'N') return 'bg-blue-100 text-blue-800 border border-blue-200'
-  if (value === 'L') return 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-  if (value === 'M') return 'bg-orange-100 text-orange-800 border border-orange-200'
-  if (value === 'H') return 'bg-red-100 text-red-800 border border-red-200'
-  if (value === 'P') return 'bg-purple-100 text-purple-800 border border-purple-200'
-  if (value === 'A') return 'bg-pink-100 text-pink-800 border border-pink-200'
-  if (value === 'U') return 'bg-indigo-100 text-indigo-800 border border-indigo-200'
-  if (value === 'C') return 'bg-green-100 text-green-800 border border-green-200'
-  if (value === 'R') return 'bg-teal-100 text-teal-800 border border-teal-200'
-  if (value === 'F') return 'bg-rose-100 text-rose-800 border border-rose-200'
-  if (value === 'O') return 'bg-lime-100 text-lime-800 border border-lime-200'
-  if (value === 'T') return 'bg-cyan-100 text-cyan-800 border border-cyan-200'
-  if (value === 'W') return 'bg-sky-100 text-sky-800 border border-sky-200'
-  if (value === 'S') return 'bg-red-200 text-red-900 border border-red-300 font-bold'
-  if (value === 'Y') return 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-  if (value === 'D') return 'bg-stone-100 text-stone-800 border border-stone-200'
-  if (value === 'I') return 'bg-zinc-100 text-zinc-800 border border-zinc-200'
-  if (value === 'CLEAR') return 'bg-slate-100 text-slate-800 border border-slate-200'
-  if (value === 'GREEN') return 'bg-green-100 text-green-800 border border-green-200'
-  if (value === 'AMBER') return 'bg-amber-100 text-amber-800 border border-amber-200'
-  if (value === 'RED') return 'bg-red-100 text-red-800 border border-red-200'
-  return 'bg-gray-100 text-gray-700 border border-gray-200'
+  if (value === 'N')
+    return 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900/50 dark:text-blue-200 dark:border-blue-700'
+  if (value === 'L')
+    return 'bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-200 dark:border-yellow-700'
+  if (value === 'M')
+    return 'bg-orange-100 text-orange-800 border border-orange-200 dark:bg-orange-900/50 dark:text-orange-200 dark:border-orange-700'
+  if (value === 'H')
+    return 'bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/50 dark:text-red-200 dark:border-red-700'
+  if (value === 'P')
+    return 'bg-purple-100 text-purple-800 border border-purple-200 dark:bg-purple-900/50 dark:text-purple-200 dark:border-purple-700'
+  if (value === 'A')
+    return 'bg-pink-100 text-pink-800 border border-pink-200 dark:bg-pink-900/50 dark:text-pink-200 dark:border-pink-700'
+  if (value === 'U')
+    return 'bg-indigo-100 text-indigo-800 border border-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-200 dark:border-indigo-700'
+  if (value === 'C')
+    return 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/50 dark:text-green-200 dark:border-green-700'
+  if (value === 'R')
+    return 'bg-teal-100 text-teal-800 border border-teal-200 dark:bg-teal-900/50 dark:text-teal-200 dark:border-teal-700'
+  if (value === 'F')
+    return 'bg-rose-100 text-rose-800 border border-rose-200 dark:bg-rose-900/50 dark:text-rose-200 dark:border-rose-700'
+  if (value === 'O')
+    return 'bg-lime-100 text-lime-800 border border-lime-200 dark:bg-lime-900/50 dark:text-lime-200 dark:border-lime-700'
+  if (value === 'T')
+    return 'bg-cyan-100 text-cyan-800 border border-cyan-200 dark:bg-cyan-900/50 dark:text-cyan-200 dark:border-cyan-700'
+  if (value === 'W')
+    return 'bg-sky-100 text-sky-800 border border-sky-200 dark:bg-sky-900/50 dark:text-sky-200 dark:border-sky-700'
+  if (value === 'S')
+    return 'bg-red-200 text-red-900 border border-red-300 font-bold dark:bg-red-800/60 dark:text-red-100 dark:border-red-600'
+  if (value === 'Y')
+    return 'bg-emerald-100 text-emerald-800 border border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-200 dark:border-emerald-700'
+  if (value === 'D')
+    return 'bg-stone-100 text-stone-800 border border-stone-200 dark:bg-stone-700 dark:text-stone-200 dark:border-stone-600'
+  if (value === 'I')
+    return 'bg-zinc-100 text-zinc-800 border border-zinc-200 dark:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-600'
+  if (value === 'CLEAR')
+    return 'bg-slate-100 text-slate-800 border border-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600'
+  if (value === 'GREEN')
+    return 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/50 dark:text-green-200 dark:border-green-700'
+  if (value === 'AMBER')
+    return 'bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-900/50 dark:text-amber-200 dark:border-amber-700'
+  if (value === 'RED')
+    return 'bg-red-100 text-red-800 border border-red-200 dark:bg-red-900/50 dark:text-red-200 dark:border-red-700'
+  return 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
 }
 
 function toggleMetric(metricKey: string) {
@@ -247,14 +268,16 @@ watch(
 
 <template>
   <div
-    class="interpretation-container h-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+    class="interpretation-container h-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
   >
-    <div class="mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
-      <h2 class="text-base font-semibold text-gray-700">Interpretation</h2>
+    <div
+      class="mb-3 flex items-center justify-between border-b border-gray-200 pb-2 dark:border-gray-600"
+    >
+      <h2 class="text-base font-semibold text-gray-700 dark:text-gray-200">Interpretation</h2>
       <button
         v-if="hasActiveMetrics"
         @click="toggleAllMetrics"
-        class="flex items-center rounded-md px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        class="flex items-center rounded-md px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:text-blue-400 dark:hover:bg-gray-700 dark:hover:text-blue-300 dark:focus:ring-blue-500 dark:focus:ring-offset-gray-800"
       >
         <span class="mr-1">{{ allExpanded ? 'Collapse All' : 'Expand All' }}</span>
         <svg
@@ -290,16 +313,22 @@ watch(
       </button>
     </div>
 
-    <div v-if="!currentDefinitions" class="py-4 text-center text-sm text-gray-500">
+    <div
+      v-if="!currentDefinitions"
+      class="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
+    >
       Loading definitions or select a version...
     </div>
     <div
       v-else-if="structuredMetricGroups.length === 0"
-      class="py-4 text-center text-sm text-gray-500"
+      class="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
     >
       No metrics defined for this version.
     </div>
-    <div v-else-if="!hasActiveMetrics" class="py-4 text-center text-sm text-gray-500">
+    <div
+      v-else-if="!hasActiveMetrics"
+      class="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
+    >
       Only default metric values are selected. Change a metric value to see its interpretation.
     </div>
 
@@ -308,16 +337,18 @@ watch(
         <div v-for="parentGroup in activeStructuredGroups" :key="parentGroup.name">
           <div
             @click="toggleGroup(parentGroup.name)"
-            class="group-header mb-2 flex cursor-pointer items-center justify-between rounded-md border border-gray-200 bg-gray-50 px-3 py-2 hover:bg-gray-100"
+            class="group-header mb-2 flex cursor-pointer items-center justify-between rounded-md border border-gray-200 bg-gray-50 px-3 py-2 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
-            <h3 class="text-sm font-semibold text-gray-800">{{ parentGroup.name }}</h3>
+            <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">
+              {{ parentGroup.name }}
+            </h3>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="2"
               stroke="currentColor"
-              class="h-4 w-4 text-gray-500 transition-transform duration-200"
+              class="h-4 w-4 text-gray-500 transition-transform duration-200 dark:text-gray-400"
               :class="{ 'rotate-180 transform': expandedGroups[parentGroup.name] }"
             >
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -326,20 +357,20 @@ watch(
 
           <div
             v-show="expandedGroups[parentGroup.name]"
-            class="ml-2 space-y-3 border-l-2 border-gray-100 pl-3"
+            class="ml-2 space-y-3 border-l-2 border-gray-100 pl-3 dark:border-gray-700"
           >
             <div v-if="parentGroup.metrics && parentGroup.metrics.length > 0" class="space-y-3">
               <div
                 v-for="metricKey in parentGroup.metrics"
                 :key="metricKey"
-                class="metric-interpretation rounded-md border border-gray-100 bg-white shadow-sm"
+                class="metric-interpretation rounded-md border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
               >
                 <div
                   @click="toggleMetric(metricKey)"
-                  class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50"
+                  class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700"
                 >
                   <div class="flex items-center">
-                    <h5 class="text-xs font-medium text-gray-700">
+                    <h5 class="text-xs font-medium text-gray-700 dark:text-gray-200">
                       {{ getMetricName(metricKey) }} ({{ metricKey }})
                     </h5>
                     <span
@@ -355,7 +386,7 @@ watch(
                     viewBox="0 0 24 24"
                     stroke-width="2"
                     stroke="currentColor"
-                    class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200"
+                    class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 dark:text-gray-500"
                     :class="{ 'rotate-180 transform': expandedMetrics[metricKey] }"
                   >
                     <path
@@ -366,10 +397,10 @@ watch(
                   </svg>
                 </div>
                 <div v-show="expandedMetrics[metricKey]" class="px-3 pb-3 pt-2">
-                  <p class="mb-1 text-xs font-semibold text-gray-800">
+                  <p class="mb-1 text-xs font-semibold text-gray-800 dark:text-gray-100">
                     {{ getSelectedDefinition(metricKey)?.value_name || 'N/A' }}
                   </p>
-                  <p class="text-xs leading-relaxed text-gray-600">
+                  <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ getDescriptionText(getSelectedDefinition(metricKey)) }}
                   </p>
                 </div>
@@ -380,16 +411,18 @@ watch(
               <div v-for="childGroup in parentGroup.children" :key="childGroup.name">
                 <div
                   @click="toggleGroup(childGroup.name)"
-                  class="group-header -ml-1 mb-2 flex cursor-pointer items-center justify-between rounded-md border border-gray-100 bg-gray-50 px-3 py-1.5 hover:bg-gray-100"
+                  class="group-header -ml-1 mb-2 flex cursor-pointer items-center justify-between rounded-md border border-gray-100 bg-gray-50 px-3 py-1.5 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
                 >
-                  <h4 class="text-xs font-semibold text-gray-600">{{ childGroup.name }}</h4>
+                  <h4 class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                    {{ childGroup.name }}
+                  </h4>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="2"
                     stroke="currentColor"
-                    class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200"
+                    class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 dark:text-gray-500"
                     :class="{ 'rotate-180 transform': expandedGroups[childGroup.name] }"
                   >
                     <path
@@ -402,19 +435,19 @@ watch(
 
                 <div
                   v-show="expandedGroups[childGroup.name] && childGroup.metrics"
-                  class="ml-2 space-y-3 border-l-2 border-gray-100 pl-3"
+                  class="ml-2 space-y-3 border-l-2 border-gray-100 pl-3 dark:border-gray-700"
                 >
                   <div
                     v-for="metricKey in childGroup.metrics"
                     :key="metricKey"
-                    class="metric-interpretation rounded-md border border-gray-100 bg-white shadow-sm"
+                    class="metric-interpretation rounded-md border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800/50"
                   >
                     <div
                       @click="toggleMetric(metricKey)"
-                      class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50"
+                      class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-3 py-2 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700"
                     >
                       <div class="flex items-center">
-                        <h5 class="text-xs font-medium text-gray-700">
+                        <h5 class="text-xs font-medium text-gray-700 dark:text-gray-200">
                           {{ getMetricName(metricKey) }} ({{ metricKey }})
                         </h5>
                         <span
@@ -430,7 +463,7 @@ watch(
                         viewBox="0 0 24 24"
                         stroke-width="2"
                         stroke="currentColor"
-                        class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200"
+                        class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 dark:text-gray-500"
                         :class="{ 'rotate-180 transform': expandedMetrics[metricKey] }"
                       >
                         <path
@@ -441,10 +474,10 @@ watch(
                       </svg>
                     </div>
                     <div v-show="expandedMetrics[metricKey]" class="px-3 pb-3 pt-2">
-                      <p class="mb-1 text-xs font-semibold text-gray-800">
+                      <p class="mb-1 text-xs font-semibold text-gray-800 dark:text-gray-100">
                         {{ getSelectedDefinition(metricKey)?.value_name || 'N/A' }}
                       </p>
-                      <p class="text-xs leading-relaxed text-gray-600">
+                      <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                         {{ getDescriptionText(getSelectedDefinition(metricKey)) }}
                       </p>
                     </div>

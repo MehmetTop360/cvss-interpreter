@@ -3,6 +3,7 @@ import type { CvssTemplateBare } from '@mono/server/src/shared/entities'
 export type CvssVersion = '3.1' | '4.0'
 export type DescriptionType = 'simplified' | 'official'
 export type SelectedMetrics = Record<string, string>
+export type Theme = 'light' | 'dark'
 
 export interface CvssState {
   selectedVersion: CvssVersion
@@ -22,5 +23,6 @@ export interface CvssState {
     '3.1': Record<string, string[]>
     '4.0': Record<string, string[]>
   }
-  activeInterpretationMetricKey: string | null
+
+  theme: Theme
 }

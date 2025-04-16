@@ -43,11 +43,16 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
 </script>
 
 <template>
-  <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm calculator-container">
-    <div v-if="!currentDefinitions" class="py-4 text-center text-gray-500">
+  <div
+    class="calculator-container rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+  >
+    <div v-if="!currentDefinitions" class="py-4 text-center text-gray-500 dark:text-gray-400">
       Loading metric definitions...
     </div>
-    <div v-else-if="structuredMetricGroups.length === 0" class="py-4 text-center text-gray-500">
+    <div
+      v-else-if="structuredMetricGroups.length === 0"
+      class="py-4 text-center text-gray-500 dark:text-gray-400"
+    >
       No metric groups defined or available for this version.
     </div>
 
@@ -58,13 +63,13 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
         class="mb-6 last:mb-0"
       >
         <h3
-          class="relative pb-2 mb-3 text-base font-semibold text-gray-800 border-b border-gray-300 group-header"
+          class="group-header relative mb-3 border-b border-gray-300 pb-2 text-base font-semibold text-gray-800 dark:border-gray-600 dark:text-gray-100"
           :data-tooltip="groupTooltips[parentGroup.name]"
         >
           {{ parentGroup.name }}
           <span
             v-if="groupTooltips[parentGroup.name]"
-            class="ml-1 text-sm font-normal text-blue-500 tooltip-indicator cursor-help hover:text-blue-700"
+            class="tooltip-indicator ml-1 cursor-help text-sm font-normal text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
             (?)
           </span>
@@ -87,9 +92,11 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
             <div
               v-for="childGroup in parentGroup.children"
               :key="childGroup.name"
-              class="pt-2 pl-4 mb-4 ml-1 border-l-2 border-gray-100 child-group last:mb-0"
+              class="child-group mb-4 ml-1 border-l-2 border-gray-100 pl-4 pt-2 last:mb-0 dark:border-gray-700"
             >
-              <h4 class="mb-2 text-sm font-semibold text-gray-600 child-group-header">
+              <h4
+                class="child-group-header mb-2 text-sm font-semibold text-gray-600 dark:text-gray-400"
+              >
                 {{ childGroup.name }}
               </h4>
               <template v-if="childGroup.metrics && childGroup.metrics.length > 0">

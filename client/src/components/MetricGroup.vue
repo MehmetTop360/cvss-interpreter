@@ -31,15 +31,16 @@ function selectValue(valueKey: string) {
 
 const selectedClasses =
   'text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-2 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+
 const defaultClasses =
-  'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
+  'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-700'
 </script>
 
 <template>
   <div
-    class="grid grid-cols-1 items-start gap-2 border-b border-gray-200 py-2 last:border-b-0 md:grid-cols-3"
+    class="grid grid-cols-1 items-start gap-2 border-b border-gray-200 py-2 last:border-b-0 dark:border-gray-700 md:grid-cols-3"
   >
-    <div class="pt-1 text-sm font-medium text-gray-700 md:col-span-1">
+    <div class="pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 md:col-span-1">
       {{ metricName }} ({{ metricKey }})
     </div>
 
@@ -76,6 +77,15 @@ const defaultClasses =
   position: relative;
 }
 
+.dark .metric-button::after {
+  background: rgba(226, 232, 240, 0.95);
+  color: #1a202c;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+.dark .metric-button::before {
+  border-top-color: rgba(226, 232, 240, 0.95);
+}
+
 .metric-button::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -85,7 +95,7 @@ const defaultClasses =
   width: max-content;
   max-width: 300px;
   padding: 6px 10px;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(17, 24, 39, 0.9);
   color: white;
   font-size: 12px;
   border-radius: 4px;
@@ -109,7 +119,7 @@ const defaultClasses =
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.85);
+  border-top-color: rgba(17, 24, 39, 0.9);
   opacity: 0;
   visibility: hidden;
   transition:

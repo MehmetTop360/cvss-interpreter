@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { trpc } from '@/trpc'
 import type { CvssTemplateBare } from '@mono/server/src/shared/entities'
-import type { CvssState as CvssStateType, CvssVersion } from '@/types/cvss'
+import type { CvssState as CvssStateType, CvssVersion, Theme } from '@/types/cvss'
 import {
   metricOrderV3_1,
   metricOrderV4_0,
@@ -58,7 +58,6 @@ const valueOrderMaps: Record<string, string[]> = {
   RE: ['X', 'L', 'M', 'H'],
   U: ['X', 'Clear', 'Green', 'Amber', 'Red'],
 }
-
 const parentChildMapV4_0: Record<string, string[]> = {
   'Base Metrics': [
     'Exploitability Metrics',
@@ -74,7 +73,6 @@ const parentChildMapV4_0: Record<string, string[]> = {
   'Environmental (Security Requirements)': [],
   'Threat Metrics': [],
 }
-
 const orderedParentGroupsV4_0 = [
   'Base Metrics',
   'Supplemental Metrics',
@@ -82,7 +80,6 @@ const orderedParentGroupsV4_0 = [
   'Environmental (Security Requirements)',
   'Threat Metrics',
 ]
-
 const orderedParentGroupsV3_1 = ['Base Score', 'Temporal Score', 'Environmental Score']
 
 export interface StructuredMetricGroup {
@@ -103,6 +100,7 @@ export const useCvssStore = defineStore('cvss', {
     selectedMetrics: { ...defaultMetricsV4_0 },
     metricOrder: { '3.1': metricOrderV3_1, '4.0': metricOrderV4_0 },
     metricGroups: { '3.1': metricGroupsV3_1, '4.0': metricGroupsV4_0 },
+    theme: 'light',
   }),
 
   getters: {
@@ -274,9 +272,33 @@ export const useCvssStore = defineStore('cvss', {
   },
 
   actions: {
+    initializeTheme() {
+      const storedTheme = localStorage.getItem('theme') as Theme | null
+      const prefersDark =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+
+      if (storedTheme) {
+        this.theme = storedTheme
+      } else {
+        this.theme = prefersDark ? 'dark' : 'light'
+      }
+      this.applyTheme()
+    },
+    toggleTheme() {
+      this.theme = this.theme === 'light' ? 'dark' : 'light'
+      localStorage.setItem('theme', this.theme)
+      this.applyTheme()
+    },
+    applyTheme() {
+      if (this.theme === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    },
+
     setVersion(version: CvssVersion) {
       if (this.selectedVersion !== version) {
-        console.log(`Switching version to ${version}`)
         this.selectedVersion = version
 
         this.selectedMetrics =
@@ -387,13 +409,11 @@ export const useCvssStore = defineStore('cvss', {
 
       this.isLoadingDefinitions = true
       this.errorLoadingDefinitions = null
-      console.log(`Fetching CVSS v${versionToFetch} definitions...`)
       try {
         const result = await trpc.CvssTemplate.getDefinitionsByVersion.query({
           version: versionToFetch as any,
         })
         this.definitions[versionToFetch] = result
-        console.log(`Successfully fetched ${result.length} definitions for v${versionToFetch}.`)
         this._initializeMetricsForCurrentVersion()
       } catch (error: any) {
         console.error(`Error fetching CVSS v${versionToFetch} definitions:`, error)

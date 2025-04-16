@@ -10,6 +10,7 @@ export default {
     '../node_modules/flowbite/**/*.{js,jsx,ts,tsx}',
   ],
   plugins: [flowbitePlugin],
+  darkMode: 'class',
   theme: {
     fontFamily: {
       body: ['"Inter var"', '"Inter"', '"Open Sans"', 'Helvetica', 'Arial', 'sans-serif'],

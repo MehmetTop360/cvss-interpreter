@@ -15,8 +15,6 @@ interface CvssDefinitionInput {
 }
 
 async function seedDatabase() {
-  console.log('Initializing data source for seeding...')
-
   const seedDataSourceOptions: DataSourceOptions = {
     type: 'postgres',
     host: config.database.host,
@@ -37,7 +35,6 @@ async function seedDatabase() {
 
   try {
     await AppDataSource.initialize()
-    console.log('Data source initialized successfully.')
 
     const repository = AppDataSource.getRepository(CvssTemplate)
 
@@ -50,10 +47,8 @@ async function seedDatabase() {
     )
 
     if (fs.existsSync(jsonPath)) {
-      console.log(`Reading from: ${jsonPath}`)
       jsonData = fs.readFileSync(jsonPath, 'utf-8')
     } else if (fs.existsSync(projectRootJsonPath)) {
-      console.log(`Reading from: ${projectRootJsonPath}`)
       jsonData = fs.readFileSync(projectRootJsonPath, 'utf-8')
     } else {
       throw new Error(
@@ -62,7 +57,6 @@ async function seedDatabase() {
     }
 
     const definitionsInput: CvssDefinitionInput[] = JSON.parse(jsonData)
-    console.log(`Loaded ${definitionsInput.length} definitions from JSON.`)
 
     if (!Array.isArray(definitionsInput) || definitionsInput.length === 0) {
       throw new Error('Seed file is empty or not a valid JSON array.')
@@ -81,20 +75,14 @@ async function seedDatabase() {
       return template
     })
 
-    console.log('Clearing existing data from cvss_templates table...')
     await repository.delete({})
-    console.log('Existing data cleared.')
 
-    console.log('Inserting new seed data...')
     await repository.save(templatesToSave, { chunk: 100 })
-    console.log(`Seeding complete. ${templatesToSave.length} records inserted.`)
   } catch (error) {
-    console.error('Error during database seeding:', error)
     process.exit(1)
   } finally {
     if (AppDataSource.isInitialized) {
       await AppDataSource.destroy()
-      console.log('Data source connection closed.')
     }
   }
 }

@@ -33,7 +33,7 @@ const { cvssString, selectedVersion, defaultCvssString } = storeToRefs(cvssStore
 const comparisonItems = ref<ComparisonItem[]>([])
 
 const initialV4Vector = 'CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H'
-const initialV3Vector = 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H'
+const initialsecondV4Vector = 'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:N/SC:L/SI:L/SA:N'
 
 const exampleVectors: ExampleVector[] = [
   {
@@ -117,11 +117,11 @@ function initializeComparisonItems() {
     },
     {
       id: 2,
-      vectorString: initialV3Vector,
+      vectorString: initialsecondV4Vector,
       isValid: true,
-      score: '9.8 (Critical)',
-      severity: 'Critical',
-      version: '3.1',
+      score: '8.6 (High)',
+      severity: 'High',
+      version: '4.0',
     },
   ]
   comparisonItems.value.forEach(calculateScore)
@@ -163,7 +163,6 @@ function resetVectorToDefault(id: number) {
     calculateScore(item)
   }
 }
-
 function updateVectorString(id: number, value: string) {
   const item = comparisonItems.value.find((i) => i.id === id)
   if (item) {
@@ -177,9 +176,7 @@ function updateVectorString(id: number, value: string) {
     calculateScore(item)
   }
 }
-
 type SeverityRating = 'None' | 'Low' | 'Medium' | 'High' | 'Critical' | 'Invalid' | 'Error'
-
 function getSeverityRating(score: number | null): SeverityRating {
   if (score === null || score === undefined || isNaN(score)) return 'None'
   if (score === 0.0) return 'None'
@@ -189,11 +186,9 @@ function getSeverityRating(score: number | null): SeverityRating {
   if (score >= 9.0 && score <= 10.0) return 'Critical'
   return 'None'
 }
-
 function calculateScore(item: ComparisonItem) {
   const vector = item.vectorString
   const version = item.version
-
   if (
     !vector ||
     (vector.startsWith('CVSS:4.0/') && vector.length <= 9) ||
@@ -204,12 +199,10 @@ function calculateScore(item: ComparisonItem) {
     item.isValid = true
     return
   }
-
   try {
     let calculator
     let scores
     let scoreValue: number | null = null
-
     if (version === '4.0' && vector.startsWith('CVSS:4.0/')) {
       calculator = new Cvss4P0(vector)
       scores = calculator.calculateScores()
@@ -242,28 +235,24 @@ function calculateScore(item: ComparisonItem) {
     item.severity = 'Invalid'
   }
 }
-
 function getSeverityClass(severity: string): string {
   const baseClasses =
     'inline-flex items-center whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-semibold shadow-sm ml-2'
   switch (severity) {
     case 'None':
-      return `${baseClasses} bg-gray-100 text-gray-700 border-gray-300`
+      return `${baseClasses} bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:border-gray-500`
     case 'Low':
-      return `${baseClasses} bg-green-100 text-green-800 border-green-300`
+      return `${baseClasses} bg-green-100 text-green-800 border-green-300 dark:bg-green-900/50 dark:text-green-200 dark:border-green-700`
     case 'Medium':
-      return `${baseClasses} bg-yellow-100 text-yellow-800 border-yellow-300`
+      return `${baseClasses} bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-200 dark:border-yellow-700`
     case 'High':
-      return `${baseClasses} bg-orange-100 text-orange-800 border-orange-300`
+      return `${baseClasses} bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/50 dark:text-orange-200 dark:border-orange-700`
     case 'Critical':
-      return `${baseClasses} bg-red-100 text-red-800 border-red-300`
-    case 'Invalid':
-    case 'Error':
+      return `${baseClasses} bg-red-100 text-red-800 border-red-300 dark:bg-red-900/50 dark:text-red-200 dark:border-red-700`
     default:
-      return `${baseClasses} bg-gray-200 text-gray-600 border-gray-400`
+      return `${baseClasses} bg-gray-200 text-gray-600 border-gray-400 dark:bg-gray-500 dark:text-gray-100 dark:border-gray-400`
   }
 }
-
 function copyToClipboard(text: string) {
   navigator.clipboard
     .writeText(text)
@@ -272,7 +261,6 @@ function copyToClipboard(text: string) {
       console.error('Failed to copy text: ', err)
     })
 }
-
 function getSimpleDescription(item: ComparisonItem): string {
   if (!item.isValid || item.severity === 'Invalid' || item.severity === 'Error') {
     return 'The vector string is invalid or could not be calculated.'
@@ -280,10 +268,8 @@ function getSimpleDescription(item: ComparisonItem): string {
   if (item.severity === 'None') {
     return 'This configuration represents little to no security risk.'
   }
-
   const vector = item.vectorString
   let descriptions = []
-
   if (vector.includes('/AV:N')) {
     descriptions.push('exploitable remotely over the network')
   } else if (vector.includes('/AV:A')) {
@@ -293,13 +279,11 @@ function getSimpleDescription(item: ComparisonItem): string {
   } else if (vector.includes('/AV:P')) {
     descriptions.push('requires physical access to exploit')
   }
-
   if (vector.includes('/AC:L')) {
     descriptions.push('with low attack complexity')
   } else if (vector.includes('/AC:H')) {
     descriptions.push('but requires high attack complexity')
   }
-
   if (vector.includes('/PR:N')) {
     descriptions.push('without privileges required')
   } else if (vector.includes('/PR:L')) {
@@ -307,7 +291,6 @@ function getSimpleDescription(item: ComparisonItem): string {
   } else if (vector.includes('/PR:H')) {
     descriptions.push('requiring high privileges')
   }
-
   if (vector.includes('/UI:N')) {
     descriptions.push('and no user interaction')
   } else if (vector.includes('/UI:R') || vector.includes('/UI:P')) {
@@ -315,12 +298,10 @@ function getSimpleDescription(item: ComparisonItem): string {
   } else if (vector.includes('/UI:A')) {
     descriptions.push('requiring user interaction where the user must grant permissions')
   }
-
   let impactDesc = ''
   const highConf = vector.includes('/C:H') || vector.includes('/VC:H')
   const highInt = vector.includes('/I:H') || vector.includes('/VI:H')
   const highAvail = vector.includes('/A:H') || vector.includes('/VA:H')
-
   if (highConf && highInt && highAvail) {
     impactDesc = 'resulting in a complete loss of confidentiality, integrity, and availability'
   } else if (highConf || highInt || highAvail) {
@@ -337,9 +318,7 @@ function getSimpleDescription(item: ComparisonItem): string {
   ) {
     impactDesc = 'with no direct impact to the vulnerable system'
   }
-
   if (impactDesc) descriptions.push(impactDesc)
-
   if (
     vector.includes('/S:C') ||
     vector.includes('/SC:') ||
@@ -359,46 +338,37 @@ function getSimpleDescription(item: ComparisonItem): string {
       descriptions.push('and can impact subsequent systems')
     }
   }
-
   if (descriptions.length === 0) {
     return 'Base metrics seem to be at default or non-impactful levels. Check details for environmental or temporal scores.'
   }
-
   let finalDesc = `This vulnerability is ${descriptions[0]}`
   if (descriptions.length > 1) {
     finalDesc += `, ${descriptions.slice(1).join(', ')}.`
   } else {
     finalDesc += '.'
   }
-
   return finalDesc.charAt(0).toUpperCase() + finalDesc.slice(1)
 }
-
 function importFromCalculator(id: number) {
   const item = comparisonItems.value.find((i) => i.id === id)
   if (item && cvssString.value) {
     updateVectorString(id, cvssString.value)
   }
 }
-
 function generateExampleVectorByKey(id: number, exampleKey: string) {
   const item = comparisonItems.value.find((i) => i.id === id)
   const example = exampleVectors.find((e) => e.key === exampleKey)
   if (!item || !example) return
-
   item.vectorString = item.version === '4.0' ? example.v4 : example.v3
   calculateScore(item)
 }
-
 function generateRandomBaseCvss(id: number) {
   const item = comparisonItems.value.find((i) => i.id === id)
   if (!item) return
-
   const version = item.version
   const prefix = `CVSS:${version}/`
   let baseMetrics: string[] = []
   let metricParts: string[] = []
-
   if (version === '4.0') {
     baseMetrics = [
       ...(metricGroupsV4_0['Exploitability Metrics'] || []),
@@ -414,17 +384,13 @@ function generateRandomBaseCvss(id: number) {
       .sort((a, b) => metricOrderV3_1.indexOf(a) - metricOrderV3_1.indexOf(b))
       .map((metric) => `${metric}:${getRandomValue(version, metric)}`)
   }
-
   item.vectorString = prefix + metricParts.join('/')
   calculateScore(item)
 }
-
 watch(
   selectedVersion,
   (newGlobalVersion) => {
-    console.log('Global version changed to:', newGlobalVersion)
     const newDefaultVector = defaultCvssString.value
-
     comparisonItems.value.forEach((item) => {
       item.vectorString = newDefaultVector
       item.version = newGlobalVersion
@@ -436,17 +402,19 @@ watch(
 </script>
 
 <template>
-  <div class="flex h-full w-full flex-col bg-gray-50">
+  <div class="flex h-full w-full flex-col bg-gray-50 dark:bg-gray-900">
     <div
-      class="sticky top-0 z-10 mb-4 border-b border-gray-300 bg-white px-4 py-5 shadow-sm sm:px-6 lg:px-8"
+      class="sticky top-0 z-10 mb-4 border-b border-gray-300 bg-white px-4 py-5 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:px-6 lg:px-8"
     >
       <div class="flex flex-wrap items-center justify-between gap-y-2">
-        <h2 class="text-lg font-semibold text-gray-700">CVSS Vector Comparison</h2>
+        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+          CVSS Vector Comparison
+        </h2>
         <div class="flex items-center space-x-4 sm:space-x-6">
           <button
             v-if="canAddMore"
             @click="addComparisonItem"
-            class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-800"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -471,12 +439,12 @@ watch(
       >
         <div v-for="(item, index) in comparisonItems" :key="item.id" class="comparison-item flex">
           <div
-            class="relative flex h-full w-full flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-md transition-shadow duration-200 hover:shadow-lg sm:p-5"
+            class="relative flex h-full w-full flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-md transition-shadow duration-200 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 sm:p-5"
           >
             <button
               v-if="index === 2 && comparisonItems.length === 3"
               @click="removeComparisonItem(item.id)"
-              class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
+              class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-red-900/50 dark:hover:text-red-400 dark:focus:ring-offset-gray-800"
               title="Remove this comparison"
             >
               <span class="sr-only">Remove</span>
@@ -494,7 +462,7 @@ watch(
 
             <div class="mb-3 flex flex-wrap items-center justify-between gap-y-2">
               <div class="flex items-center">
-                <h3 class="text-sm font-semibold text-gray-900 sm:text-base">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 sm:text-base">
                   Vector {{ index + 1 }}
                 </h3>
                 <span :class="getSeverityClass(item.severity)">
@@ -506,7 +474,7 @@ watch(
             <div class="mb-3">
               <label
                 :for="`vector-string-${item.id}`"
-                class="mb-1 block text-xs font-medium text-gray-700"
+                class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300"
                 >Vector String</label
               >
               <div class="flex rounded-md shadow-sm">
@@ -516,12 +484,12 @@ watch(
                     :value="item.vectorString"
                     @input="updateVectorString(item.id, ($event.target as HTMLInputElement).value)"
                     type="text"
-                    class="block w-full rounded-l-md border-gray-300 pr-8 text-xs shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    class="block w-full rounded-l-md border-gray-300 pr-8 text-xs shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:text-sm"
                     :placeholder="`CVSS:${item.version}/AV:N/AC:L/...`"
                   />
                   <button
                     @click="copyToClipboard(item.vectorString)"
-                    class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-400 hover:text-gray-600"
+                    class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                     title="Copy to clipboard"
                   >
                     <svg
@@ -542,7 +510,7 @@ watch(
                 </div>
                 <button
                   @click="resetVectorToDefault(item.id)"
-                  class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:px-3"
+                  class="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 sm:px-3"
                   title="Reset to Default"
                 >
                   <svg
@@ -562,7 +530,7 @@ watch(
                   <span class="hidden sm:inline">Reset</span>
                 </button>
               </div>
-              <div v-if="!item.isValid" class="mt-1 text-xs text-red-600">
+              <div v-if="!item.isValid" class="mt-1 text-xs text-red-600 dark:text-red-400">
                 Invalid vector string. Please check the format.
               </div>
             </div>
@@ -570,26 +538,26 @@ watch(
             <div class="flex flex-grow flex-col">
               <details class="mb-3 text-sm">
                 <summary
-                  class="cursor-pointer text-xs font-medium text-blue-600 hover:text-blue-800 sm:text-sm"
+                  class="cursor-pointer text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 sm:text-sm"
                 >
                   Example Vectors
                 </summary>
                 <div class="relative">
                   <div
-                    class="mt-2 grid grid-cols-1 gap-x-2 gap-y-1 rounded-md border border-gray-100 bg-gray-50 p-2 text-xs sm:grid-cols-2"
+                    class="mt-2 grid grid-cols-1 gap-x-2 gap-y-1 rounded-md border border-gray-100 bg-gray-50 p-2 text-xs dark:border-gray-700 dark:bg-gray-700/50 sm:grid-cols-2"
                   >
                     <button
                       v-for="example in exampleVectors"
                       :key="example.key"
                       @click="generateExampleVectorByKey(item.id, example.key)"
-                      class="flex items-center rounded px-1.5 py-1 text-left text-gray-700 hover:bg-gray-100"
+                      class="flex items-center rounded px-1.5 py-1 text-left text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600"
                       :title="item.version === '4.0' ? example.v4 : example.v3"
                     >
                       {{ example.name }}
                     </button>
                     <button
                       @click="generateRandomBaseCvss(item.id)"
-                      class="flex items-center rounded px-1.5 py-1 text-left text-blue-800 hover:bg-gray-100 sm:col-span-2"
+                      class="flex items-center rounded px-1.5 py-1 text-left text-blue-800 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-gray-600 sm:col-span-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -614,7 +582,7 @@ watch(
               <div class="mb-3 flex items-center">
                 <button
                   @click="importFromCalculator(item.id)"
-                  class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1"
+                  class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800/50 dark:focus:ring-offset-gray-800"
                   title="Import the vector from the calculator view"
                 >
                   <svg
@@ -635,15 +603,19 @@ watch(
                 </button>
               </div>
 
-              <div class="mb-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                <h4 class="mb-1 text-xs font-semibold text-gray-700">Summary</h4>
-                <p class="text-xs text-gray-600">{{ getSimpleDescription(item) }}</p>
+              <div
+                class="mb-4 rounded-lg border border-gray-100 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-700/50"
+              >
+                <h4 class="mb-1 text-xs font-semibold text-gray-700 dark:text-gray-200">Summary</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-300">
+                  {{ getSimpleDescription(item) }}
+                </p>
               </div>
 
-              <div class="mt-auto border-t border-gray-100 pt-3">
+              <div class="mt-auto border-t border-gray-100 pt-3 dark:border-gray-700">
                 <RouterLink
                   :to="{ name: 'Calculator', query: {}, hash: `#${item.vectorString}` }"
-                  class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800"
+                  class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                 >
                   View full details
                   <svg

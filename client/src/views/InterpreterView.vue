@@ -99,16 +99,13 @@ function parseAndApplyVector(vector: string) {
           setVersion(version)
           nextTick(() => {
             setSelectedMetrics(newMetrics)
-            console.log('Applied metrics from URL hash:', newMetrics)
           })
         } else {
-          console.error('Failed to apply vector from URL hash due to parsing errors.')
           shouldReset = true
         }
       }
     }
   } catch (e) {
-    console.error('Error parsing CVSS vector from URL hash:', e)
     shouldReset = true
   } finally {
     if (shouldReset) {
@@ -125,7 +122,6 @@ onMounted(async () => {
   const hash = route.hash
   if (hash && hash.startsWith('#CVSS:')) {
     const vectorFromHash = hash.substring(1)
-    console.log('Parsing vector from URL hash on mount:', vectorFromHash)
     parseAndApplyVector(vectorFromHash)
   } else if (!cvssStore.definitions[cvssStore.selectedVersion]) {
     await cvssStore.fetchDefinitions()
@@ -137,10 +133,8 @@ watch(
   (newHash, oldHash) => {
     if (newHash !== oldHash && newHash && newHash.startsWith('#CVSS:') && !isProcessingUrl.value) {
       const vectorFromHash = newHash.substring(1)
-      console.log('Parsing vector from URL hash change:', vectorFromHash)
       parseAndApplyVector(vectorFromHash)
     } else if (!newHash && oldHash && !isProcessingUrl.value) {
-      console.log('Hash removed, resetting metrics.')
       resetMetrics()
     }
   }
@@ -344,16 +338,18 @@ watch(cvssString, (newVector) => {
 </script>
 
 <template>
-  <div class="flex h-[calc(100vh-8rem)] flex-col bg-gray-50">
-    <div class="sticky top-0 z-20 mb-4 border-b border-gray-300 bg-white px-4 pb-3 pt-2 shadow-sm">
-      <div class="mb-2 flex items-center justify-between">
-        <h2 class="text-base font-semibold text-gray-700">
+  <div class="flex h-[calc(100vh-8rem)] flex-col overflow-hidden bg-gray-50 dark:bg-gray-900">
+    <div
+      class="sticky top-0 z-20 flex-shrink-0 px-4 pt-2 pb-3 bg-white border-b border-gray-300 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+    >
+      <div class="flex flex-wrap items-center justify-between mb-2 gap-y-2">
+        <h2 class="text-base font-semibold text-gray-700 dark:text-gray-200">
           {{ cvssVersionFullName }} Vector & Score
         </h2>
-        <div class="flex flex-wrap justify-end gap-2 sm:flex-nowrap sm:space-x-2">
+        <div class="flex flex-wrap items-center justify-end gap-2 sm:flex-nowrap sm:space-x-2">
           <button
             @click="resetMetrics"
-            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-700 transition-colors bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500"
             data-tooltip="Reset all metrics to default values"
           >
             <svg
@@ -374,7 +370,7 @@ watch(cvssString, (newVector) => {
           </button>
           <button
             @click="copyToClipboard"
-            class="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-700 transition-colors bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800/60"
             data-tooltip="Copy CVSS vector string to clipboard"
           >
             <svg
@@ -409,101 +405,113 @@ watch(cvssString, (newVector) => {
         </div>
       </div>
 
-      <div class="rounded-md border border-gray-200 bg-gray-50 p-3">
-        <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
-          <div
-            v-if="!editMode"
-            class="flex flex-grow items-center rounded border border-gray-200 bg-white px-3 py-2 text-sm shadow-inner"
-          >
-            <p class="flex-grow break-all font-mono text-gray-800">{{ cvssString }}</p>
-            <button
-              @click="startEditing"
-              class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none"
-              title="Edit vector string"
+      <div
+        class="p-3 mt-2 border border-gray-200 rounded-md bg-gray-50 dark:border-gray-600 dark:bg-gray-700/50"
+      >
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+          <div class="flex-grow">
+            <div
+              v-if="!editMode"
+              class="flex min-w-0 items-center rounded border border-gray-200 bg-white px-3 py-1.5 text-sm shadow-inner dark:border-gray-500 dark:bg-gray-900"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-4 w-4"
+              <p
+                class="flex-grow font-mono text-gray-800 truncate dark:text-gray-200"
+                :title="cvssString"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div v-else class="flex flex-grow flex-col">
-            <div class="flex rounded border border-gray-200 bg-white shadow-inner">
-              <input
-                v-model="editableVectorString"
-                type="text"
-                class="flex-grow rounded-l border-none px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                placeholder="CVSS:4.0/AV:N/AC:L/..."
-              />
-              <div class="flex border-l border-gray-200">
-                <button
-                  @click="applyVectorChanges"
-                  class="px-2 text-green-600 hover:bg-gray-50 hover:text-green-800 focus:outline-none"
-                  title="Apply changes"
+                {{ cvssString }}
+              </p>
+              <button
+                @click="startEditing"
+                class="flex-shrink-0 p-1 ml-2 text-blue-600 hover:text-blue-800 focus:outline-none dark:text-blue-400 dark:hover:text-blue-300"
+                title="Edit vector string"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-4 h-4"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="h-5 w-5"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M4.5 12.75l6 6 9-13.5"
-                    />
-                  </svg>
-                </button>
-                <button
-                  @click="cancelEditing"
-                  class="px-2 text-red-600 hover:bg-gray-50 hover:text-red-800 focus:outline-none"
-                  title="Cancel editing"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="h-5 w-5"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                  />
+                </svg>
+              </button>
             </div>
-            <p v-if="editableVectorError" class="mt-1 text-xs text-red-600">
-              {{ editableVectorError }}
-            </p>
-            <p v-else class="mt-1 text-xs text-gray-500">
-              Enter a valid CVSS {{ selectedVersion }} vector string
-            </p>
+            <div v-else class="flex flex-col">
+              <div
+                class="flex bg-white border border-gray-300 rounded shadow-sm focus-within:ring-2 focus-within:ring-blue-400 dark:border-gray-500 dark:bg-gray-900"
+              >
+                <input
+                  v-model="editableVectorString"
+                  type="text"
+                  class="min-w-0 flex-grow border-none bg-transparent px-3 py-1.5 font-mono text-sm text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-100 dark:placeholder-gray-400"
+                  placeholder="CVSS:4.0/AV:N/AC:L/..."
+                />
+                <div class="flex flex-shrink-0 border-l border-gray-300 dark:border-gray-500">
+                  <button
+                    @click="applyVectorChanges"
+                    class="px-2 text-green-600 hover:bg-gray-50 focus:outline-none dark:hover:bg-gray-800"
+                    title="Apply changes"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-5 h-5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    @click="cancelEditing"
+                    class="px-2 text-red-600 hover:bg-gray-50 focus:outline-none dark:hover:bg-gray-800"
+                    title="Cancel editing"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-5 h-5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <p v-if="editableVectorError" class="mt-1 text-xs text-red-600 dark:text-red-400">
+                {{ editableVectorError }}
+              </p>
+            </div>
           </div>
 
-          <div :class="scoreDisplayClass">Score: {{ calculatedScoreData.display }}</div>
+          <div :class="scoreDisplayClass" class="flex-shrink-0">
+            {{ calculatedScoreData.display }}
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="flex-grow overflow-y-auto px-4 pb-6 sm:px-6 lg:px-8">
+    <div class="flex-grow px-4 pb-6 overflow-y-auto sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div class="col-span-12 lg:col-span-7">
           <CvssCalculator />
         </div>
-
         <div class="col-span-12 lg:col-span-5">
           <div class="h-full">
             <InterpretationDisplay />
@@ -518,7 +526,6 @@ watch(cvssString, (newVector) => {
 [data-tooltip] {
   position: relative;
 }
-
 [data-tooltip]::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -540,7 +547,10 @@ watch(cvssString, (newVector) => {
     visibility 0.2s ease-in-out;
   transition-delay: 0.5s;
 }
-
+.dark [data-tooltip]::after {
+  background: rgba(237, 242, 247, 0.9);
+  color: #1a202c;
+}
 [data-tooltip]::before {
   content: '';
   position: absolute;
@@ -559,13 +569,14 @@ watch(cvssString, (newVector) => {
     visibility 0.2s ease-in-out;
   transition-delay: 0.5s;
 }
-
+.dark [data-tooltip]::before {
+  border-top-color: rgba(237, 242, 247, 0.9);
+}
 [data-tooltip]:hover::after,
 [data-tooltip]:hover::before {
   opacity: 1;
   visibility: visible;
 }
-
 [data-tooltip]:not(:hover)::after,
 [data-tooltip]:not(:hover)::before {
   transition-delay: 0s;

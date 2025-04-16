@@ -1,3 +1,4 @@
+<!-- eslint-disable no-useless-escape -->
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -130,6 +131,8 @@ function generateReportHtml(): string {
   const date = new Date().toLocaleString()
   const version = selectedVersion.value
   const groupsToReport = activeStructuredGroupsForReport.value
+  const safeCvssString = cvssString.value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const safeScore = props.currentScore.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
   let html = `
     <!DOCTYPE html>
@@ -138,245 +141,66 @@ function generateReportHtml(): string {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>CVSS ${version} Report - ${date}</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
       <style>
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-          line-height: 1.6;
-          color: #333;
-          max-width: 900px;
-          margin: 2rem auto;
-          padding: 0 1.5rem;
-          background-color: #f9fafb;
-        }
-        .report-container {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
-        }
-
-        .header {
-          margin-bottom: 2.5rem;
-          padding-bottom: 1.5rem;
-          border-bottom: 2px solid #e5e7eb;
-        }
-        h1 {
-          font-size: 1.75rem;
-          font-weight: 600;
-          color: #111827;
-          margin-bottom: 0.5rem;
-        }
-        .header p {
-            font-size: 0.9rem;
-            color: #6b7280;
-        }
-        .vector-string-container {
-            margin: 1.5rem 0;
-        }
-         .vector-string-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #4b5563;
-            display: block;
-            margin-bottom: 0.25rem;
-         }
-        .vector-string {
-          font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-          background-color: #f3f4f6;
-          padding: 0.75rem 1rem;
-          border-radius: 6px;
-          word-break: break-all;
-          border: 1px solid #e5e7eb;
-          font-size: 0.9rem;
-          color: #1f2937;
-        }
-        .score-container {
-            margin-top: 1rem;
-        }
-        .score-label {
-             font-size: 0.9rem;
-            font-weight: 600;
-            color: #4b5563;
-        }
-        .score {
-          font-weight: 700;
-          font-size: 1.1rem;
-          color: #1d4ed8;
-          margin-left: 0.5rem;
-        }
-
-        h2 {
-          font-size: 1.3rem;
-          font-weight: 600;
-          color: #111827;
-          margin-top: 2.5rem;
-          margin-bottom: 1rem;
-          padding-bottom: 0.6rem;
-          border-bottom: 1px solid #d1d5db;
-        }
-        h3 {
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #374151;
-          margin-top: 1.5rem;
-          margin-bottom: 0.8rem;
-          padding-left: 1rem;
-           position: relative;
-        }
-         h3::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.3em;
-            bottom: 0.3em;
-            width: 4px;
-            background-color: #9ca3af;
-            border-radius: 2px;
-        }
-
-
-        .metric-group-content {
-            padding-left: 0;
-        }
-         .child-metric-group-content {
-            padding-left: 1rem;
-        }
-
-
-        .metric {
-          margin-bottom: 1.25rem;
-          padding: 1rem 1.25rem;
-          background-color: #ffffff;
-          border-radius: 6px;
-          border: 1px solid #e5e7eb;
-          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-        }
-        .metric-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 0.75rem;
-          flex-wrap: wrap;
-        }
-        .metric-name {
-          font-weight: 600;
-          font-size: 1rem;
-          color: #1f2937;
-          margin-right: 1rem;
-           flex-shrink: 0;
-        }
-        .metric-value {
-          font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-          font-weight: 600;
-          padding: 0.2rem 0.6rem;
-          border-radius: 9999px;
-          font-size: 0.75rem;
-          border: 1px solid transparent;
-          white-space: nowrap;
-          margin-top: 2px;
-        }
-
-        .metric-value-default { background-color: #f3f4f6; color: #4b5563; border-color: #e5e7eb; }
-        .metric-value-n { background-color: #dbeafe; color: #1e3a8a; border-color: #bfdbfe; }
-        .metric-value-l { background-color: #fef9c3; color: #854d0e; border-color: #fef08a; }
-        .metric-value-m { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
-        .metric-value-h { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
-        .metric-value-p { background-color: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
-        .metric-value-a { background-color: #fce7f3; color: #9d174d; border-color: #fbcfe8; }
-        .metric-value-u { background-color: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
-        .metric-value-c { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; }
-        .metric-value-r { background-color: #ccfbf1; color: #0f766e; border-color: #99f6e4; }
-        .metric-value-f { background-color: #ffe4e6; color: #9f1239; border-color: #fecdd3; }
-        .metric-value-o { background-color: #ecfccb; color: #4d7c0f; border-color: #d9f99d; }
-        .metric-value-t { background-color: #cffafe; color: #0e7490; border-color: #a5f3fc; }
-        .metric-value-w { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
-        .metric-value-s { background-color: #fecaca; color: #7f1d1d; border-color: #fca5a5; font-weight: 700; }
-        .metric-value-y { background-color: #d1fae5; color: #057a55; border-color: #a7f3d0; }
-        .metric-value-d { background-color: #f5f5f4; color: #57534e; border-color: #e7e5e4; }
-        .metric-value-i { background-color: #f4f4f5; color: #52525b; border-color: #e4e4e7; }
-        .metric-value-clear { background-color: #f1f5f9; color: #475569; border-color: #e2e8f0; }
-        .metric-value-green { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
-        .metric-value-amber { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
-        .metric-value-red { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
-
-
-        .metric-value-title {
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-          font-size: 0.9rem;
-           color: #374151;
-        }
-        .metric-description {
-          font-size: 0.875rem;
-          color: #4b5563;
-        }
-
-        .footer {
-          margin-top: 3rem;
-          padding-top: 1.5rem;
-          border-top: 1px solid #e5e7eb;
-          font-size: 0.8rem;
-          color: #9ca3af;
-          text-align: center;
-        }
-
-        @media print {
-          body { padding: 0; font-size: 10pt; max-width: 100%; margin: 1cm; background-color: #fff;}
-          .report-container { box-shadow: none; border: none; padding: 0; }
-          .metric { page-break-inside: avoid; border: 1px solid #ccc; background-color: #fff !important; box-shadow: none;}
-          .metric-value { border: 1px solid #ccc !important; }
-          h2, h3 { page-break-after: avoid; }
-          .no-print { display: none; }
-          .page-break { page-break-before: always; }
-          .metric-value { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-          .metric-value-default { background-color: #f3f4f6 !important; }
-          .metric-value-n { background-color: #dbeafe !important; }
-          .metric-value-l { background-color: #fef9c3 !important; }
-          .metric-value-m { background-color: #ffedd5 !important; }
-          .metric-value-h { background-color: #fee2e2 !important; }
-          .metric-value-p { background-color: #f3e8ff !important; }
-          .metric-value-a { background-color: #fce7f3 !important; }
-          .metric-value-u { background-color: #e0e7ff !important; }
-          .metric-value-c { background-color: #dcfce7 !important; }
-          .metric-value-r { background-color: #ccfbf1 !important; }
-          .metric-value-f { background-color: #ffe4e6 !important; }
-          .metric-value-o { background-color: #ecfccb !important; }
-          .metric-value-t { background-color: #cffafe !important; }
-          .metric-value-w { background-color: #e0f2fe !important; }
-          .metric-value-s { background-color: #fecaca !important; }
-          .metric-value-y { background-color: #d1fae5 !important; }
-          .metric-value-d { background-color: #f5f5f4 !important; }
-          .metric-value-i { background-color: #f4f4f5 !important; }
-          .metric-value-clear { background-color: #f1f5f9 !important; }
-          .metric-value-green { background-color: #dcfce7 !important; }
-          .metric-value-amber { background-color: #fef3c7 !important; }
-          .metric-value-red { background-color: #fee2e2 !important; }
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.6; color: #333; max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; background-color: #f9fafb; }
+        .report-container { background-color: #ffffff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; position: relative; }
+        .report-controls { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: flex-end; }
+        .pdf-button { display: inline-flex; align-items: center; padding: 0.4rem 0.8rem; background-color: #3b82f6; color: white; border: none; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: background-color 0.2s; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .pdf-button:hover { background-color: #2563eb; }
+        .pdf-button svg { margin-right: 0.375rem; width: 1rem; height: 1rem; }
+        .header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid #e5e7eb; }
+        h1 { font-size: 1.75rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem; }
+        .header p { font-size: 0.9rem; color: #6b7280; }
+        .vector-string-container { margin: 1.5rem 0; }
+        .vector-string-label { font-size: 0.8rem; font-weight: 600; color: #4b5563; display: block; margin-bottom: 0.25rem; }
+        .vector-string { font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; background-color: #f3f4f6; padding: 0.75rem 1rem; border-radius: 6px; word-break: break-all; border: 1px solid #e5e7eb; font-size: 0.9rem; color: #1f2937; }
+        .score-container { margin-top: 1rem; }
+        .score-label { font-size: 0.9rem; font-weight: 600; color: #4b5563; }
+        .score { font-weight: 700; font-size: 1.1rem; color: #1d4ed8; margin-left: 0.5rem; }
+        h2 { font-size: 1.3rem; font-weight: 600; color: #111827; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid #d1d5db; }
+        h3 { font-size: 1.1rem; font-weight: 600; color: #374151; margin-top: 1.5rem; margin-bottom: 0.8rem; padding-left: 1rem; position: relative; }
+        h3::before { content: ''; position: absolute; left: 0; top: 0.3em; bottom: 0.3em; width: 4px; background-color: #9ca3af; border-radius: 2px; }
+        .metric-group-content { padding-left: 0; }
+        .child-metric-group-content { padding-left: 1rem; }
+        .metric { margin-bottom: 1.25rem; padding: 1rem 1.25rem; background-color: #ffffff; border-radius: 6px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); }
+        .metric-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .metric-name { font-weight: 600; font-size: 1rem; color: #1f2937; margin-right: 1rem; flex-shrink: 0; }
+        .metric-value { font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; border: 1px solid transparent; white-space: nowrap; margin-top: 2px; }
+        .metric-value-default { background-color: #f3f4f6; color: #4b5563; border-color: #e5e7eb; } .metric-value-n { background-color: #dbeafe; color: #1e3a8a; border-color: #bfdbfe; } .metric-value-l { background-color: #fef9c3; color: #854d0e; border-color: #fef08a; } .metric-value-m { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; } .metric-value-h { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; } .metric-value-p { background-color: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; } .metric-value-a { background-color: #fce7f3; color: #9d174d; border-color: #fbcfe8; } .metric-value-u { background-color: #e0e7ff; color: #3730a3; border-color: #c7d2fe; } .metric-value-c { background-color: #dcfce7; color: #15803d; border-color: #bbf7d0; } .metric-value-r { background-color: #ccfbf1; color: #0f766e; border-color: #99f6e4; } .metric-value-f { background-color: #ffe4e6; color: #9f1239; border-color: #fecdd3; } .metric-value-o { background-color: #ecfccb; color: #4d7c0f; border-color: #d9f99d; } .metric-value-t { background-color: #cffafe; color: #0e7490; border-color: #a5f3fc; } .metric-value-w { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; } .metric-value-s { background-color: #fecaca; color: #7f1d1d; border-color: #fca5a5; font-weight: 700; } .metric-value-y { background-color: #d1fae5; color: #057a55; border-color: #a7f3d0; } .metric-value-d { background-color: #f5f5f4; color: #57534e; border-color: #e7e5e4; } .metric-value-i { background-color: #f4f4f5; color: #52525b; border-color: #e4e4e7; } .metric-value-clear { background-color: #f1f5f9; color: #475569; border-color: #e2e8f0; } .metric-value-green { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; } .metric-value-amber { background-color: #fef3c7; color: #92400e; border-color: #fde68a; } .metric-value-red { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        .metric-value-title { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; color: #374151; }
+        .metric-description { font-size: 0.875rem; color: #4b5563; }
+        .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.8rem; color: #9ca3af; text-align: center; }
+        .no-print {}
+        @media print { body { padding: 0; font-size: 10pt; max-width: 100%; margin: 1cm; background-color: #fff;} .report-container { box-shadow: none; border: none; padding: 0; } .metric { page-break-inside: avoid; border: 1px solid #ccc; background-color: #fff !important; box-shadow: none;} .metric-value { border: 1px solid #ccc !important; } h2, h3 { page-break-after: avoid; } .no-print { display: none !important; } .page-break { page-break-before: always; } .metric-value { print-color-adjust: exact; -webkit-print-color-adjust: exact; } .metric-value-default { background-color: #f3f4f6 !important; } .metric-value-n { background-color: #dbeafe !important; } .metric-value-l { background-color: #fef9c3 !important; } .metric-value-m { background-color: #ffedd5 !important; } .metric-value-h { background-color: #fee2e2 !important; } .metric-value-p { background-color: #f3e8ff !important; } .metric-value-a { background-color: #fce7f3 !important; } .metric-value-u { background-color: #e0e7ff !important; } .metric-value-c { background-color: #dcfce7 !important; } .metric-value-r { background-color: #ccfbf1 !important; } .metric-value-f { background-color: #ffe4e6 !important; } .metric-value-o { background-color: #ecfccb !important; } .metric-value-t { background-color: #cffafe !important; } .metric-value-w { background-color: #e0f2fe !important; } .metric-value-s { background-color: #fecaca !important; } .metric-value-y { background-color: #d1fae5 !important; } .metric-value-d { background-color: #f5f5f4 !important; } .metric-value-i { background-color: #f4f4f5 !important; } .metric-value-clear { background-color: #f1f5f9 !important; } .metric-value-green { background-color: #dcfce7 !important; } .metric-value-amber { background-color: #fef3c7 !important; } .metric-value-red { background-color: #fee2e2 !important; } }
       </style>
     </head>
     <body>
-      <div class="report-container">
+      <div class="report-container" id="report-content">
+        <div class="report-controls no-print">
+           <button id="download-pdf-button" class="pdf-button">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+               Download PDF
+           </button>
+        </div>
         <div class="header">
           <h1>CVSS ${version} Vulnerability Assessment Report</h1>
           <p>Generated on: ${date}</p>
           <div class="vector-string-container">
             <span class="vector-string-label">CVSS Vector String:</span>
-            <div class="vector-string">${cvssString.value}</div>
+            <div class="vector-string">${safeCvssString}</div>
           </div>
           <div class="score-container">
              <span class="score-label">Overall Score:</span>
-             <span class="score">${props.currentScore}</span>
+             <span class="score">${safeScore}</span>
           </div>
         </div>
-
         <div class="report-content">
   `
 
   const renderMetrics = (metrics: string[] | undefined) => {
     let metricsHtml = ''
     if (!metrics) return metricsHtml
-
     metrics.forEach((metricKey) => {
       const definition = getSelectedDefinition(metricKey)
       const metricName = getMetricName(metricKey)
@@ -384,7 +208,6 @@ function generateReportHtml(): string {
       const valueName = definition?.value_name || 'N/A'
       const description = getDescriptionText(definition)
       const valueClass = getValueClass(metricValue)
-
       metricsHtml += `
                 <div class="metric">
                   <div class="metric-header">
@@ -402,37 +225,67 @@ function generateReportHtml(): string {
   groupsToReport.forEach((parentGroup) => {
     html += `
       <div class="metric-group">
-        <h2>${parentGroup.name}</h2>
-    `
-
+        <h2>${parentGroup.name}</h2>`
     if (parentGroup.metrics && parentGroup.metrics.length > 0) {
       html += `<div class="metric-group-content">`
       html += renderMetrics(parentGroup.metrics)
       html += `</div>`
     }
-
     if (parentGroup.children && parentGroup.children.length > 0) {
       parentGroup.children.forEach((childGroup) => {
         html += `
           <div class="child-metric-group">
             <h3>${childGroup.name}</h3>
             <div class="child-metric-group-content">
-               ${renderMetrics(childGroup.metrics)}
+              ${renderMetrics(childGroup.metrics)}
             </div>
-          </div>
-        `
+          </div>`
       })
     }
-
-    html += `
-      </div> `
+    html += `</div> `
   })
 
   html += `
         </div> <div class="footer">
           <p>This report was generated using the CVSS Interpreter.</p>
         </div>
-      </div> </body>
+      </div> <script>
+        var pdfButton = document.getElementById('download-pdf-button');
+        if (pdfButton) {
+          pdfButton.addEventListener('click', function() {
+            var pdfElement = document.getElementById('report-content');
+            var pdfButtonContainer = pdfElement.querySelector('.report-controls');
+
+            if (pdfButtonContainer) {
+               pdfButtonContainer.style.display = 'none';
+            }
+
+            var opt = {
+              margin:       [0.5, 0.5, 0.5, 0.5],
+              filename:     'cvss-report-${version}-${Date.now()}.pdf',
+              image:        { type: 'jpeg', quality: 0.98 },
+              html2canvas:  { scale: 2, useCORS: true, logging: false },
+              jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            if (typeof html2pdf !== 'undefined') {
+              html2pdf().from(pdfElement).set(opt).save().then(function() {
+                 if (pdfButtonContainer) { pdfButtonContainer.style.display = 'flex'; }
+              }).catch(function(error) {
+                 console.error("Error generating PDF:", error);
+                 if (pdfButtonContainer) { pdfButtonContainer.style.display = 'flex'; }
+              });
+            } else {
+              console.error('html2pdf library is not loaded.');
+              alert('Could not generate PDF. Required library not found.');
+              if (pdfButtonContainer) { pdfButtonContainer.style.display = 'flex'; }
+            }
+          });
+        } else {
+            console.error("Download PDF button not found");
+        }
+      <\/script>
+    </body>
     </html>
   `
 
@@ -444,13 +297,10 @@ function generateReport() {
 
   try {
     const html = generateReportHtml()
-
     const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
-
     reportUrl.value = url
     reportReady.value = true
-
     window.open(url, '_blank')
   } catch (error) {
     console.error('Error generating report:', error)
@@ -463,7 +313,7 @@ function generateReport() {
 <template>
   <button
     @click="generateReport"
-    class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+    class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-800"
     :disabled="generatingReport"
     data-tooltip="Generate a detailed HTML report in a new tab"
   >
