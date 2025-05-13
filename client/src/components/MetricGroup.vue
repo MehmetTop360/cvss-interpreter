@@ -77,21 +77,25 @@ const defaultClasses =
   position: relative;
 }
 
-.dark .metric-button::after {
-  background: rgba(226, 232, 240, 0.95);
-  color: #1a202c;
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
-}
-.dark .metric-button::before {
-  border-top-color: rgba(226, 232, 240, 0.95);
+.metric-button::after,
+.metric-button::before {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+  transition-delay: 0.5s;
+  z-index: 100;
 }
 
 .metric-button::after {
   content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 10px);
+  top: 100%;
+  bottom: auto;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(5px);
   width: max-content;
   max-width: 300px;
   padding: 6px 10px;
@@ -99,34 +103,31 @@ const defaultClasses =
   color: white;
   font-size: 12px;
   border-radius: 4px;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.5s,
-    visibility 0.5s;
-  transition-delay: 0.8s;
-  z-index: 10;
-  pointer-events: none;
   text-align: left;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   line-height: 1.4;
 }
 
+.dark .metric-button::after {
+  background: rgba(226, 232, 240, 0.95);
+  color: #1f2937;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
 .metric-button::before {
   content: '';
-  position: absolute;
-  bottom: calc(100% + 5px);
+  top: 100%;
+  bottom: auto;
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: rgba(17, 24, 39, 0.9);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.5s,
-    visibility 0.5s;
-  transition-delay: 0.8s;
-  z-index: 10;
+  border-bottom-color: rgba(17, 24, 39, 0.9);
+  border-top-color: transparent;
+}
+
+.dark .metric-button::before {
+  border-bottom-color: rgba(226, 232, 240, 0.95);
+  border-top-color: transparent;
 }
 
 .metric-button:hover::after,
@@ -138,5 +139,7 @@ const defaultClasses =
 .metric-button:not(:hover)::after,
 .metric-button:not(:hover)::before {
   transition-delay: 0s;
+  top: 100%;
+  bottom: auto;
 }
 </style>

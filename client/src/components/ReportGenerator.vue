@@ -313,7 +313,7 @@ function generateReport() {
 <template>
   <button
     @click="generateReport"
-    class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-800"
+    class="report-button inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-800"
     :disabled="generatingReport"
     data-tooltip="Generate a detailed HTML report in a new tab"
   >
@@ -356,50 +356,61 @@ function generateReport() {
     {{ generatingReport ? 'Generating...' : 'Generate Report' }}
   </button>
 </template>
+
 <style scoped>
 [data-tooltip] {
   position: relative;
 }
 
+[data-tooltip]::after,
+[data-tooltip]::before {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+  transition-delay: 0.5s;
+}
+
 [data-tooltip]::after {
   content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 5px);
+  top: auto;
+  bottom: 100%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-5px);
   padding: 4px 8px;
   background: rgba(0, 0, 0, 0.8);
   color: white;
   border-radius: 4px;
   font-size: 11px;
   white-space: nowrap;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    visibility 0.2s ease-in-out;
-  transition-delay: 0.5s;
 }
 
 [data-tooltip]::before {
   content: '';
-  position: absolute;
+  top: auto;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   border-width: 5px;
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    visibility 0.2s ease-in-out;
-  transition-delay: 0.5s;
+}
+
+.report-button[data-tooltip]:hover::after {
+  top: 100%;
+  bottom: auto;
+  transform: translateX(-50%) translateY(5px);
+}
+
+.report-button[data-tooltip]:hover::before {
+  top: 100%;
+  bottom: auto;
+  border-top-color: transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.8);
 }
 
 [data-tooltip]:hover::after,

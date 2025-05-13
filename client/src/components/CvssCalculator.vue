@@ -138,8 +138,6 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
 .group-header[data-tooltip]::after,
 .group-header[data-tooltip]::before {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -147,14 +145,16 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
     opacity 0.2s ease-in-out,
     visibility 0.2s ease-in-out;
   transition-delay: 0.5s;
-  z-index: 20;
+  z-index: 100;
 }
 
 .group-header[data-tooltip]::after {
   content: attr(data-tooltip);
-  bottom: calc(100% + 8px);
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
   padding: 6px 10px;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(17, 24, 39, 0.9);
   color: white;
   border-radius: 4px;
   font-size: 12px;
@@ -164,24 +164,45 @@ function handleMetricUpdate(metricKey: string, valueKey: string) {
   max-width: 300px;
   text-align: center;
   line-height: 1.4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.dark .group-header[data-tooltip]::after {
+  background: rgba(226, 232, 240, 0.95);
+  color: #1f2937;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .group-header[data-tooltip]::before {
   content: '';
-  bottom: calc(100% + 3px);
-  border-width: 5px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
   border-style: solid;
-  border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+  border-color: transparent transparent rgba(17, 24, 39, 0.9) transparent;
+  margin-top: -1px;
+}
+
+.dark .group-header[data-tooltip]::before {
+  border-color: transparent transparent rgba(226, 232, 240, 0.95) transparent;
 }
 
 .group-header[data-tooltip]:hover::after,
 .group-header[data-tooltip]:hover::before {
   opacity: 1;
   visibility: visible;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+  transition-delay: 0.5s;
 }
 
 .group-header[data-tooltip]:not(:hover)::after,
 .group-header[data-tooltip]:not(:hover)::before {
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
   transition-delay: 0s;
 }
 

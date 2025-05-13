@@ -340,16 +340,18 @@ watch(cvssString, (newVector) => {
 <template>
   <div class="flex h-[calc(100vh-8rem)] flex-col overflow-hidden bg-gray-50 dark:bg-gray-900">
     <div
-      class="sticky top-0 z-20 flex-shrink-0 px-4 pt-2 pb-3 bg-white border-b border-gray-300 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+      class="sticky top-0 z-20 flex-shrink-0 border-b border-gray-300 bg-white px-4 pb-3 pt-2 shadow-sm dark:border-gray-700 dark:bg-gray-800"
     >
-      <div class="flex flex-wrap items-center justify-between mb-2 gap-y-2">
+      <div class="mb-2 flex flex-wrap items-center justify-between gap-y-2">
         <h2 class="text-base font-semibold text-gray-700 dark:text-gray-200">
           {{ cvssVersionFullName }} Vector & Score
         </h2>
-        <div class="flex flex-wrap items-center justify-end gap-2 sm:flex-nowrap sm:space-x-2">
+        <div
+          class="top-buttons flex flex-wrap items-center justify-end gap-2 sm:flex-nowrap sm:space-x-2"
+        >
           <button
             @click="resetMetrics"
-            class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-700 transition-colors bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500"
+            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500"
             data-tooltip="Reset all metrics to default values"
           >
             <svg
@@ -370,7 +372,7 @@ watch(cvssString, (newVector) => {
           </button>
           <button
             @click="copyToClipboard"
-            class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-700 transition-colors bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800/60"
+            class="inline-flex items-center rounded-md bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800/60"
             data-tooltip="Copy CVSS vector string to clipboard"
           >
             <svg
@@ -406,7 +408,7 @@ watch(cvssString, (newVector) => {
       </div>
 
       <div
-        class="p-3 mt-2 border border-gray-200 rounded-md bg-gray-50 dark:border-gray-600 dark:bg-gray-700/50"
+        class="mt-2 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700/50"
       >
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
           <div class="flex-grow">
@@ -415,14 +417,14 @@ watch(cvssString, (newVector) => {
               class="flex min-w-0 items-center rounded border border-gray-200 bg-white px-3 py-1.5 text-sm shadow-inner dark:border-gray-500 dark:bg-gray-900"
             >
               <p
-                class="flex-grow font-mono text-gray-800 truncate dark:text-gray-200"
+                class="flex-grow truncate font-mono text-gray-800 dark:text-gray-200"
                 :title="cvssString"
               >
                 {{ cvssString }}
               </p>
               <button
                 @click="startEditing"
-                class="flex-shrink-0 p-1 ml-2 text-blue-600 hover:text-blue-800 focus:outline-none dark:text-blue-400 dark:hover:text-blue-300"
+                class="ml-2 flex-shrink-0 p-1 text-blue-600 hover:text-blue-800 focus:outline-none dark:text-blue-400 dark:hover:text-blue-300"
                 title="Edit vector string"
               >
                 <svg
@@ -431,7 +433,7 @@ watch(cvssString, (newVector) => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-4 h-4"
+                  class="h-4 w-4"
                 >
                   <path
                     stroke-linecap="round"
@@ -443,7 +445,7 @@ watch(cvssString, (newVector) => {
             </div>
             <div v-else class="flex flex-col">
               <div
-                class="flex bg-white border border-gray-300 rounded shadow-sm focus-within:ring-2 focus-within:ring-blue-400 dark:border-gray-500 dark:bg-gray-900"
+                class="flex rounded border border-gray-300 bg-white shadow-sm focus-within:ring-2 focus-within:ring-blue-400 dark:border-gray-500 dark:bg-gray-900"
               >
                 <input
                   v-model="editableVectorString"
@@ -463,7 +465,7 @@ watch(cvssString, (newVector) => {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      class="h-5 w-5"
                     >
                       <path
                         stroke-linecap="round"
@@ -483,7 +485,7 @@ watch(cvssString, (newVector) => {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-5 h-5"
+                      class="h-5 w-5"
                     >
                       <path
                         stroke-linecap="round"
@@ -507,7 +509,7 @@ watch(cvssString, (newVector) => {
       </div>
     </div>
 
-    <div class="flex-grow px-4 pb-6 overflow-y-auto sm:px-6 lg:px-8">
+    <div class="flex-grow overflow-y-auto px-4 pb-6 pt-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div class="col-span-12 lg:col-span-7">
           <CvssCalculator />
@@ -526,57 +528,76 @@ watch(cvssString, (newVector) => {
 [data-tooltip] {
   position: relative;
 }
+
+[data-tooltip]::after,
+[data-tooltip]::before {
+  position: absolute;
+  left: 50%;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+  transition-delay: 0.5s;
+}
+
 [data-tooltip]::after {
   content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 5px);
-  left: 50%;
-  transform: translateX(-50%);
+  top: auto;
+  bottom: 100%;
+  transform: translateX(-50%) translateY(-5px);
   padding: 4px 8px;
   background: rgba(0, 0, 0, 0.8);
   color: white;
   border-radius: 4px;
   font-size: 11px;
   white-space: nowrap;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    visibility 0.2s ease-in-out;
-  transition-delay: 0.5s;
 }
+
 .dark [data-tooltip]::after {
   background: rgba(237, 242, 247, 0.9);
   color: #1a202c;
 }
+
 [data-tooltip]::before {
   content: '';
-  position: absolute;
+  top: auto;
   bottom: 100%;
-  left: 50%;
   transform: translateX(-50%);
   border-width: 5px;
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    visibility 0.2s ease-in-out;
-  transition-delay: 0.5s;
 }
+
 .dark [data-tooltip]::before {
   border-top-color: rgba(237, 242, 247, 0.9);
 }
+
+.top-buttons [data-tooltip]:hover::after {
+  top: 100%;
+  bottom: auto;
+  transform: translateX(-50%) translateY(5px);
+}
+
+.top-buttons [data-tooltip]:hover::before {
+  top: 100%;
+  bottom: auto;
+  border-top-color: transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.8);
+}
+
+.dark .top-buttons [data-tooltip]:hover::before {
+  border-bottom-color: rgba(237, 242, 247, 0.9);
+}
+
 [data-tooltip]:hover::after,
 [data-tooltip]:hover::before {
   opacity: 1;
   visibility: visible;
 }
+
 [data-tooltip]:not(:hover)::after,
 [data-tooltip]:not(:hover)::before {
   transition-delay: 0s;
