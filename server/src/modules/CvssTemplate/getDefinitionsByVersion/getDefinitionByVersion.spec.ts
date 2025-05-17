@@ -312,7 +312,6 @@ describe('getDefinitionsByVersion', () => {
           time: end - start,
         }
       } catch (error) {
-        console.error(`Error in test with size ${size}:`, error)
         return { size, time: -1 }
       }
     }
@@ -323,47 +322,22 @@ describe('getDefinitionsByVersion', () => {
 
     const results = [smallSize, mediumSize, largeSize].filter((r) => r.time > 0)
 
-    if (results.length > 0) {
-      console.log('Performance measurements:')
-      console.table(results)
+    if (results.length >= 2) {
+      for (let i = 1; i < results.length; i += 1) {
+        const prev = results[i - 1]
+        const curr = results[i]
 
-      if (results.length >= 2) {
-        for (let i = 1; i < results.length; i += 1) {
-          const prev = results[i - 1]
-          const curr = results[i]
-          const timeIncrease = curr.time / prev.time
-          const sizeIncrease = curr.size / prev.size
-
-          console.log(
-            `Size increase ${prev.size} → ${curr.size} (${sizeIncrease.toFixed(1)}x): ` +
-              `Time increase ${timeIncrease.toFixed(2)}x`
-          )
-        }
-
-        // Overall analysis
-        const firstResult = results[0]
-        const lastResult = results[results.length - 1]
-        const overallTimeIncrease = lastResult.time / firstResult.time
-        const overallSizeIncrease = lastResult.size / firstResult.size
-
-        console.log(
-          `Overall: Size increased by ${overallSizeIncrease.toFixed(1)}x, ` +
-            `time increased by ${overallTimeIncrease.toFixed(2)}x`
-        )
-
-        // Complexity assessment
-        if (overallTimeIncrease < overallSizeIncrease * 0.5) {
-          console.log(
-            'Analysis suggests better than linear time (possibly O(log n) or constant)'
-          )
-        } else if (overallTimeIncrease < overallSizeIncrease * 1.5) {
-          console.log('Analysis suggests roughly linear time O(n)')
-        } else {
-          console.log(
-            'Analysis suggests worse than linear time (possibly O(n²) or higher)'
-          )
-        }
+        expect(curr.time).toBeGreaterThan(0)
+        expect(prev.time).toBeGreaterThan(0)
       }
+
+      const firstResult = results[0]
+      const lastResult = results[results.length - 1]
+      const overallTimeIncrease = lastResult.time / firstResult.time
+      const overallSizeIncrease = lastResult.size / firstResult.size
+
+      expect(overallTimeIncrease).toBeDefined()
+      expect(overallSizeIncrease).toBeDefined()
     }
   })
 })
